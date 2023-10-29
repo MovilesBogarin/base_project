@@ -13,8 +13,6 @@ class InputTextBox extends StatelessWidget {
     return TextField(
       controller: controller,
       enableInteractiveSelection: false,
-      textCapitalization: TextCapitalization.characters,
-      autofocus: true,
       obscureText: hideText,
       decoration: InputDecoration(
         hintText: hint,

@@ -1,5 +1,6 @@
 import 'package:base_project/presentation/widgets/input_text_box.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -31,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Food Structured', style: TextStyle(fontFamily: 'Roboto', fontSize: 50.0, color: colors.primary)),
+              Text('Food Structured', style: TextStyle(fontFamily: 'Roboto', fontSize: 40.0, color: colors.primary)),
               const SizedBox(height: 15.0),
               const CircleAvatar(
                 radius: 100.0,
@@ -58,28 +59,9 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 child: TextButton(
                   style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue)),
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        title: const Text('Summary'),
-                        content: Text('Correo: ${emailController.text} \nContraseña: ${passwordController.text}'),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(ctx).pop();
-                            },
-                            child: Container(
-                              color: Colors.green,
-                              padding: const EdgeInsets.all(14),
-                              child: const Text('okay'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    context.go('/test');
                   },
                   child: const Text('Sing in'),
                 ),

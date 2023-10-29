@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import './config/theme/app_theme.dart';
-import 'presentation/screens/login_page.dart';
-// import 'package:base_project/presentation/screens/simple_page.dart';
+import './presentation/router/router.dart';
 
 void main() => runApp(const MyApp());
 
@@ -10,11 +9,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Food Structured',
-      home: const LoginPage(),
       theme: AppTheme().theme(),
+      routerConfig: router,
     );
   }
 }
