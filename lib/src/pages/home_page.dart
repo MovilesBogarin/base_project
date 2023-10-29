@@ -44,7 +44,7 @@ class _Home_PageState extends State<Home_Page> {
                 decoration: InputDecoration(
                     hintText: 'Username',
                     labelText: 'User Name',
-                    suffixIcon: Icon(Icons.verified_user),
+                    suffixIcon: const Icon(Icons.verified_user),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0))),
                 onSubmitted: (valor) {
@@ -52,7 +52,7 @@ class _Home_PageState extends State<Home_Page> {
                   print("El nombre es: " + _nombre);
                 },
               ),
-              Divider(
+              const Divider(
                 height: 18.0,
               ),
               TextField(
@@ -70,7 +70,7 @@ class _Home_PageState extends State<Home_Page> {
                   print("El nombre es: " + _email);
                 },
               ),
-              Divider(
+              const Divider(
                 height: 18.0,
               ),
               TextField(
@@ -81,7 +81,7 @@ class _Home_PageState extends State<Home_Page> {
                 decoration: InputDecoration(
                     hintText: 'Password',
                     labelText: 'Password',
-                    suffixIcon: Icon(Icons.lock_clock_outlined),
+                    suffixIcon: const Icon(Icons.lock_clock_outlined),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0))),
                 onSubmitted: (valor) {
@@ -89,7 +89,7 @@ class _Home_PageState extends State<Home_Page> {
                   print("El password es: " + _pass);
                 },
               ),
-              Divider(
+              const Divider(
                 height: 18.0,
               ),
               SizedBox(
@@ -98,7 +98,7 @@ class _Home_PageState extends State<Home_Page> {
                       foregroundColor:
                           MaterialStateProperty.all<Color>(Colors.blue)),
                   onPressed: () {},
-                  child: Text('Sing in'),
+                  child: const Text('Sing in'),
                 ),
               )
             ],
