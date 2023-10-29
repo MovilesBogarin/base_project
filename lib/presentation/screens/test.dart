@@ -13,7 +13,7 @@ class Test extends StatelessWidget {
             const Text('Test page', 
               style: TextStyle(
                 fontFamily: 'Roboto',
-                fontSize: 50.0,
+                fontSize: 40.0,
               ),
             ),
             const SizedBox(height: 15.0),
