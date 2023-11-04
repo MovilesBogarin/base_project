@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../config/auth/auth.dart';
 
 class Test extends StatelessWidget {
-  const Test({super.key});
+  Test({super.key});
+
+  final User? user = Auth().currentUser;
+  Future<void> signOut() async {
+    await Auth().signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -10,8 +17,8 @@ class Test extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const Text('Test page', 
-              style: TextStyle(
+            Text(user?.email ?? 'No email', 
+              style: const TextStyle(
                 fontFamily: 'Roboto',
                 fontSize: 40.0,
               ),
@@ -19,9 +26,10 @@ class Test extends StatelessWidget {
             const SizedBox(height: 15.0),
             TextButton(
               onPressed: () {
+                signOut();
                 context.go('/login');
               }, 
-              child: const Text('Salir')
+              child: const Text('LogOut')
             ),
           ],
         ),

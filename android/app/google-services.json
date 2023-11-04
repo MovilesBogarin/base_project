@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "779750279829",
+    "project_id": "foodstructured",
+    "storage_bucket": "foodstructured.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779750279829:android:fbc344b76a07d9c586a99c",
+        "android_client_info": {
+          "package_name": "com.example.food_structured"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMEkLnv85hfHqVW1EKWBg1yYLRgS2_BdQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

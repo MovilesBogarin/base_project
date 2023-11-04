@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../screens/index.dart';
+import '../../screens/index.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: '/login',
@@ -14,7 +14,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/test',
       builder: (BuildContext context, GoRouterState state) {
-        return const Test();
+        return Test();
       },
     ),
   ],

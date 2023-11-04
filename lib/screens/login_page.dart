@@ -1,6 +1,8 @@
-import 'package:base_project/presentation/widgets/input_text_box.dart';
 import 'package:flutter/material.dart';
+import 'package:base_project/presentation/widgets/input_text_box.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../config/auth/auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,8 +12,37 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String? errorMessage = '';
+  bool isLogin = true;
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  Future<void> signInWithEmailAndPassword() async {
+    try {
+      await Auth().signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
+
+  Future<void> createUserWithEmailAndPassword() async {
+    try {
+      await Auth().createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -40,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                 backgroundImage: AssetImage('resources/images/FoodStructuredLogo.png'),
               ),
               const SizedBox(height: 15.0),
-              const Text('Iniciar Sesión', style: TextStyle(fontFamily: 'Roboto', fontSize: 35.0),
+              Text(isLogin ? 'Iniciar Sesión' : 'Registrarse', style: const TextStyle(fontFamily: 'Roboto', fontSize: 35.0),
               ),
               const SizedBox(height: 15.0),
               InputTextBox(
@@ -55,17 +86,33 @@ class _LoginPageState extends State<LoginPage> {
                 icon: Icons.lock,
                 hideText: true,
               ),
+              TextButton(
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
+                onPressed: () {
+                  setState(() {
+                    isLogin = !isLogin;
+                  });
+                },
+                child: Text(isLogin ? 'Cambiar a registro' : 'Cambiar a inicio de sesión'),
+              ),
               const SizedBox(height: 15.0),
               SizedBox(
                 child: TextButton(
                   style: ButtonStyle(
                     foregroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
                   onPressed: () {
+                    if (isLogin) {
+                      signInWithEmailAndPassword();
+                    } else {
+                      createUserWithEmailAndPassword();
+                    }
                     context.go('/test');
                   },
-                  child: const Text('Sing in'),
+                  child: Text(isLogin ? 'Iniciar Sesión' : 'Registrarse'),
                 ),
-              )
+              ),
+              Text(errorMessage ?? '', style: const TextStyle(color: Colors.red)),
             ],
           )
         ],
