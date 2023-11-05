@@ -63,21 +63,28 @@ class _LoginPageState extends State<LoginPage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Food Structured', style: TextStyle(fontFamily: 'Roboto', fontSize: 40.0, color: colors.primary)),
+              Text('Food Structured',
+                  style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 40.0,
+                      color: colors.primary)),
               const SizedBox(height: 15.0),
               const CircleAvatar(
                 radius: 100.0,
                 backgroundColor: Colors.white,
-                backgroundImage: AssetImage('resources/images/FoodStructuredLogo.png'),
+                backgroundImage:
+                    AssetImage('resources/images/FoodStructuredLogo.png'),
               ),
               const SizedBox(height: 15.0),
-              Text(isLogin ? 'Iniciar Sesión' : 'Registrarse', style: const TextStyle(fontFamily: 'Roboto', fontSize: 35.0),
+              Text(
+                isLogin ? 'Iniciar Sesión' : 'Registrarse',
+                style: const TextStyle(fontFamily: 'Roboto', fontSize: 35.0),
               ),
               const SizedBox(height: 15.0),
               InputTextBox(
                 controller: emailController,
                 label: 'Correo electrónico',
-                icon: Icons.email,  
+                icon: Icons.email,
               ),
               const SizedBox(height: 15.0),
               InputTextBox(
@@ -88,31 +95,35 @@ class _LoginPageState extends State<LoginPage> {
               ),
               TextButton(
                 style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.blue)),
                 onPressed: () {
                   setState(() {
                     isLogin = !isLogin;
                   });
                 },
-                child: Text(isLogin ? 'Cambiar a registro' : 'Cambiar a inicio de sesión'),
+                child: Text(isLogin
+                    ? 'Cambiar a registro'
+                    : 'Cambiar a inicio de sesión'),
               ),
               const SizedBox(height: 15.0),
               SizedBox(
                 child: TextButton(
                   style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.blue)),
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue)),
                   onPressed: () {
                     if (isLogin) {
                       signInWithEmailAndPassword();
                     } else {
                       createUserWithEmailAndPassword();
                     }
-                    context.go('/test');
                   },
                   child: Text(isLogin ? 'Iniciar Sesión' : 'Registrarse'),
                 ),
               ),
-              Text(errorMessage ?? '', style: const TextStyle(color: Colors.red)),
+              Text(errorMessage ?? '',
+                  style: const TextStyle(color: Colors.red)),
             ],
           )
         ],
