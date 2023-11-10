@@ -3,7 +3,8 @@ import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../config/auth/auth.dart';
 
 class CalendarScreen extends StatelessWidget with CustomAppBar {
-  const CalendarScreen({Key? key}) : super(key: key);
+  CalendarScreen({Key? key}) : super(key: key);
+  final String? email = Auth().currentUser?.email;
 
   Future<void> signOut() async {
     await Auth().signOut();
@@ -17,7 +18,7 @@ class CalendarScreen extends StatelessWidget with CustomAppBar {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Calendario'),
+            Text('Calendario of $email'),
             TextButton(
               onPressed: signOut, 
               child: const Text('Cerrar Sesión')

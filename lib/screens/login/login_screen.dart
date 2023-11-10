@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:base_project/presentation/widgets/inputs/input_text_box.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../config/auth/auth.dart';
-import '../../config/theme/app_theme.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -65,16 +64,17 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('Food Structured',
-                  style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 40.0,
-                      color: colors.primary)),
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 40.0,
+                  color: colors.primary
+                ),
+              ),
               const SizedBox(height: 15.0),
               const CircleAvatar(
                 radius: 100.0,
                 backgroundColor: Colors.white,
-                backgroundImage:
-                    AssetImage('resources/images/FoodStructuredLogo.png'),
+                backgroundImage: AssetImage('resources/images/FoodStructuredLogo.png'),
               ),
               const SizedBox(height: 15.0),
               Text(
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 label: 'Contraseña',
                 suffixIcon: IconButton(
                   icon: Icon(isPasswordHidden ? Icons.visibility : Icons.visibility_off), 
-                  onPressed: () => setState(() => isPasswordHidden = !isPasswordHidden)
+                  onPressed: () => setState(() => isPasswordHidden = !isPasswordHidden),
                 ),
                 hideText: isPasswordHidden,
               ),
@@ -101,14 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: ButtonStyle(
                   foregroundColor: MaterialStateProperty.all<Color>(colors.primary),
                 ),
-                onPressed: () {
-                  setState(() {
-                    isLogin = !isLogin;
-                  });
-                },
-                child: Text(isLogin
-                    ? 'Cambiar a registro'
-                    : 'Cambiar a inicio de sesión'),
+                onPressed: () => setState(() => isLogin = !isLogin),
+                child: Text(isLogin ? 'Cambiar a registro' : 'Cambiar a inicio de sesión'),
               ),
               SizedBox(
                 child: TextButton(
@@ -126,8 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text(isLogin ? 'Iniciar Sesión' : 'Registrarse'),
                 ),
               ),
-              Text(errorMessage ?? '',
-                  style: const TextStyle(color: Colors.red)),
+              Text(errorMessage ?? '', style: const TextStyle(color: Colors.red)),
             ],
           )
         ],
