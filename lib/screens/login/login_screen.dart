@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:base_project/presentation/widgets/input_text_box.dart';
-import 'package:go_router/go_router.dart';
+import 'package:base_project/presentation/widgets/inputs/input_text_box.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../config/auth/auth.dart';
+import '../../config/auth/auth.dart';
+import '../../config/theme/app_theme.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   String? errorMessage = '';
   bool isLogin = true;
+  bool isPasswordHidden = true;
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -90,13 +91,16 @@ class _LoginPageState extends State<LoginPage> {
               InputTextBox(
                 controller: passwordController,
                 label: 'Contraseña',
-                icon: Icons.lock,
-                hideText: true,
+                suffixIcon: IconButton(
+                  icon: Icon(isPasswordHidden ? Icons.visibility : Icons.visibility_off), 
+                  onPressed: () => setState(() => isPasswordHidden = !isPasswordHidden)
+                ),
+                hideText: isPasswordHidden,
               ),
               TextButton(
                 style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.blue)),
+                  foregroundColor: MaterialStateProperty.all<Color>(colors.primary),
+                ),
                 onPressed: () {
                   setState(() {
                     isLogin = !isLogin;
@@ -106,12 +110,12 @@ class _LoginPageState extends State<LoginPage> {
                     ? 'Cambiar a registro'
                     : 'Cambiar a inicio de sesión'),
               ),
-              const SizedBox(height: 15.0),
               SizedBox(
                 child: TextButton(
                   style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue)),
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                    backgroundColor: MaterialStateProperty.all<Color>(colors.primary),
+                  ),
                   onPressed: () {
                     if (isLogin) {
                       signInWithEmailAndPassword();

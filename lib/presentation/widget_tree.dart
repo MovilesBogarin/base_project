@@ -1,6 +1,5 @@
-import 'package:base_project/config/auth/auth.dart';
-import 'package:base_project/screens/index.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import '../config/auth/auth.dart';
+import '../screens/index.dart';
 
 import 'package:flutter/widgets.dart';
 
@@ -18,9 +17,9 @@ class _WidgetTreeState extends State<WidgetTree> {
         stream: Auth().authStateChanges,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Test();
+            return const CalendarScreen();
           } else {
-            return const LoginPage();
+            return const LoginScreen();
           }
         });
   }
