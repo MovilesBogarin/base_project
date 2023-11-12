@@ -12,7 +12,7 @@ mixin CustomDrawer {
     Drawer(
       child: SafeArea(
         child: ListView.builder(
-          itemCount: 1,
+          itemCount: appMenuItems.length,
           itemBuilder: menuList,
         ),
       ),

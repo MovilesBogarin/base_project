@@ -24,5 +24,17 @@ final GoRouter router = GoRouter(
         return CalendarScreen();
       },
     ),
+    GoRoute(
+      path: '/recipes',
+      builder: (BuildContext context, GoRouterState state) {
+        return const RecipesScreen();
+      },
+    ),
+    GoRoute(
+      path: '/recipes/:id',
+      builder: (BuildContext context, GoRouterState state) {
+        return EditRecipeScreen(id: int.parse(state.pathParameters['id']!));
+      },
+    ),
   ],
 );
