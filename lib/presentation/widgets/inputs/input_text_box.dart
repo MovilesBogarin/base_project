@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class InputTextBox extends StatelessWidget {
-  final controller;
+  final TextEditingController controller;
   final String? hint;
   final String label;
   final IconData? icon;
+  final IconButton? suffixIcon;
   final bool hideText;
-  const InputTextBox({super.key, this.hint, this.label = 'Mensaje', this.icon, this.hideText = false, required this.controller});
+  const InputTextBox({super.key, this.hint, this.label = 'Mensaje', this.icon, this.suffixIcon, this.hideText = false, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +18,11 @@ class InputTextBox extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         labelText: label,
-        suffixIcon: Icon(icon),
+        suffixIcon: suffixIcon ?? Icon(icon),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0))),
+          borderRadius: BorderRadius.circular(20.0)
+        ),
+      ),
     );
   }
 }
