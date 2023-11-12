@@ -21,4 +21,10 @@ List<MenuItem> appMenuItems = <MenuItem>[
     link: '/calendar',
     icon: Icons.calendar_today_rounded
   ),
+  const MenuItem(
+    title: 'Recetas',
+    subTitle: 'Ver y crear recetas.',
+    link: '/recipes',
+    icon: Icons.restaurant_rounded
+  ),
 ];
