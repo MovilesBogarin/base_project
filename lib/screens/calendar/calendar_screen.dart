@@ -44,7 +44,8 @@ class CalendarScreen extends State<CalendarState> with CustomAppBar, CustomDrawe
     return Scaffold(
       appBar: appBarWithMenuButton(title: 'Calendario'),
       drawer: drawerSimple(),
-      body: Container(
+      body: Padding( padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+      child: Container(
         decoration: const BoxDecoration(
                     color: Color.fromARGB(255, 255, 255, 255),
                     borderRadius: BorderRadius.only(
@@ -89,6 +90,8 @@ class CalendarScreen extends State<CalendarState> with CustomAppBar, CustomDrawe
           ],
         ),
       ),
+      
+      )
     );
   }
 
