@@ -21,7 +21,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/calendar',
       builder: (BuildContext context, GoRouterState state) {
-        return CalendarScreen();
+        return CalendarState();
       },
     ),
     GoRoute(
