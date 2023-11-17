@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:base_project/presentation/widgets/inputs/input_text_box.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../../config/auth/auth.dart';
+import '../../presentation/login/login_presenter.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,32 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  Future<void> signInWithEmailAndPassword() async {
-    try {
-      await Auth().signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
-    }
-  }
-
-  Future<void> createUserWithEmailAndPassword() async {
-    try {
-      await Auth().createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message;
-      });
-    }
-  }
 
   @override
   void dispose() {
@@ -110,12 +83,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                     backgroundColor: MaterialStateProperty.all<Color>(colors.primary),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (isLogin) {
-                      signInWithEmailAndPassword();
+                      errorMessage = await LoginPresenter.signInWithEmailAndPassword(emailController.text, passwordController.text);
                     } else {
-                      createUserWithEmailAndPassword();
+                      errorMessage = await LoginPresenter.createUserWithEmailAndPassword(emailController.text, passwordController.text);
                     }
+                    setState(() {
+                      errorMessage = errorMessage;
+                    });
                   },
                   child: Text(isLogin ? 'Iniciar Sesión' : 'Registrarse'),
                 ),

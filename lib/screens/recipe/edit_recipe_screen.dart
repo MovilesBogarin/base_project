@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../presentation/widgets/appbars/custom_appbar.dart';
-
-import '../../static/static.dart';
+// import '../../';
+// import '../../domain/dtos/recipe_dto.dart';
 
 class EditRecipeScreen extends StatefulWidget {
   final int id;
@@ -15,12 +15,12 @@ class EditRecipeScreen extends StatefulWidget {
 class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> recipe = recipes.where((element) => element['id'] == widget.id).first;
+    // final Recipe recipe = recipes.where((element) => element.id == widget.id).first;
     return Scaffold(
-      appBar: appBarWithReturnButton(title: recipe['name']),
-      body: SafeArea(
+      appBar: appBarWithReturnButton(title: 'Nueva receta'),
+      body: const SafeArea(
         child: Center(
-          child: Text('Editar receta con id ${recipe['id']}'),
+          child: Text('Editar receta vacia'),
         ),
       ),
     );
