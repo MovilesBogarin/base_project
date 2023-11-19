@@ -6,8 +6,8 @@ final recipes = <Map<String,dynamic>>[
     'ingredients': <Map<String,dynamic>>[
       {'name': 'Pasta', 'quantity': 200, 'unit': 'gr'},
       {'name': 'Tomato', 'quantity': 2, 'unit': 'u'},
-      {'name': 'Salt', 'quantity': 1, 'unit': 'pinch'},
-      {'name': 'Pepper', 'quantity': 1, 'unit': 'pinch'},
+      {'name': 'Salt', 'quantity': 1, 'unit': 'pz'},
+      {'name': 'Pepper', 'quantity': 1, 'unit': 'pz'},
     ],
   }, {
     'id': 2,
@@ -16,8 +16,23 @@ final recipes = <Map<String,dynamic>>[
     'ingredients': <Map<String,dynamic>>[
       {'name': 'Flour', 'quantity': 200.5, 'unit': 'gr'},
       {'name': 'Tomato', 'quantity': 2, 'unit': 'u'},
-      {'name': 'Salt', 'quantity': 1, 'unit': 'pinch'},
+      {'name': 'Salt', 'quantity': 1, 'unit': 'pz'},
       {'name': 'Pepperoni', 'quantity': 60, 'unit': 'gr'},
     ],
   }
+];
+
+final units = <String>[
+  'pz',
+  'gr',
+  'ml',
+  'oz',
+  'tz',
+  'u',
+  'cda',
+  'cdta',
+  'l',
+  'kg',
+  'lb',
+  'gal',
 ];
