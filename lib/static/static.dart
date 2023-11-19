@@ -9,6 +9,13 @@ final recipes = <Map<String,dynamic>>[
       {'name': 'Salt', 'quantity': 1, 'unit': 'pz'},
       {'name': 'Pepper', 'quantity': 1, 'unit': 'pz'},
     ],
+    'steps': <String>[
+      'Boil the water',
+      'Add the pasta',
+      'Cook it',
+      'Add the tomato sauce',
+      'Add the salt and pepper',
+    ]
   }, {
     'id': 2,
     'name': 'Pizza',
@@ -19,6 +26,12 @@ final recipes = <Map<String,dynamic>>[
       {'name': 'Salt', 'quantity': 1, 'unit': 'pz'},
       {'name': 'Pepperoni', 'quantity': 60, 'unit': 'gr'},
     ],
+    'steps': <String>[
+      'Make the dough',
+      'Add the tomato sauce',
+      'Add the pepperoni',
+      'Bake it',
+    ]
   }
 ];
 

@@ -19,18 +19,50 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
   bool isEditing = false;
   final TextEditingController _recipeNameController = TextEditingController();
   final TextEditingController _recipeDescriptionController = TextEditingController();
-  final TextEditingController _ingredientNameController = TextEditingController();
+  late Map<String, dynamic> currentRecipe;
+  bool recipeHasIngredientChanges = false;
+
+  void saveIngredient(String name, num quantity, String unit) {
+    final List<Map<String,dynamic>> ingredients = currentRecipe['ingredients'];
+    final Map<String,dynamic> ingredient = ingredients.where((element) => element['name'] == name).first;
+    if (ingredient['name'] != name || ingredient['quantity'] != quantity || ingredient['unit'] != unit) {
+      recipeHasIngredientChanges = true;
+      setState(() {
+        currentRecipe['ingredients'] = ingredients.map((Map<String,dynamic> ingrediente) {
+          if (ingrediente['name'] == name) {
+            ingrediente['name'] = name;
+            ingrediente['quantity'] = quantity;
+            ingrediente['unit'] = unit;
+          }
+          return ingrediente;
+        }).toList();
+      });
+    }
+  }
+
+  void saveRecipe(String name, String description, List<Map<String,dynamic>> ingredients, List<String> steps) {
+    final Map<String, dynamic> recipeToUpdate = recipes.where((element) => element['id'] == widget.id).first;
+    setState(() {
+      recipeToUpdate['name'] = name;
+      recipeToUpdate['description'] = description;
+      recipeToUpdate['ingredients'] = ingredients;
+      recipeToUpdate['steps'] = steps;
+    });
+    recipeHasIngredientChanges = false;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> recipe = recipes.where((element) => element['id'] == widget.id).first;
-    final List<Map<String,dynamic>> ingredients = recipe['ingredients'];
-    
+    currentRecipe = recipes.where((element) => element['id'] == widget.id).first;
+    final List<Map<String,dynamic>> ingredients = currentRecipe['ingredients'];
+    final List<String> steps = currentRecipe['steps'];
+    final List<TextEditingController> stepsControllers = steps.map((String stepText) => TextEditingController(text: stepText)).toList();
+
     if (_recipeNameController.text.isEmpty) {
-      _recipeNameController.text = recipe['name'];
+      _recipeNameController.text = currentRecipe['name'];
     }
     if (_recipeDescriptionController.text.isEmpty) {
-      _recipeDescriptionController.text = recipe['description'];
+      _recipeDescriptionController.text = currentRecipe['description'];
     }
 
     final ingredientsChipsList = ingredients.mapIndexed((int index, Map<String,dynamic> ingrediente) =>
@@ -43,12 +75,19 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
             ingredients.removeAt(index);
           });
         } : null,
+        onTap: isEditing ? () {
+          openDialog(context: context, saveIngredient: saveIngredient, name: ingrediente['name'], quantity: ingrediente['quantity'], unit: ingrediente['unit']);
+        } : null,
       )).toList(); 
 
     return Scaffold(
       appBar: appBarWithReturnButton( 
         button: IconButton(onPressed: () {
           setState(() {
+            if (isEditing) {
+              final stepsUpdated = stepsControllers.map((TextEditingController controller) => controller.text).toList();
+              saveRecipe(_recipeNameController.text, _recipeDescriptionController.text, currentRecipe['ingredients'], stepsUpdated);
+            }
             isEditing = !isEditing;
           });
         }, 
@@ -78,7 +117,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
               ...ingredientsChipsList,
               if (isEditing) IconButton(
                 onPressed: () {
-                  openDialog(context: context, controller: _ingredientNameController);
+                  openDialog(context: context, saveIngredient: saveIngredient);
                 }, 
                 icon: Container(
                   decoration: BoxDecoration(
@@ -93,7 +132,17 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
             ]
           ),
           const SizedBox(height: 16),
-          Text('Editar receta con id ${recipe['id']}')
+          const Text('Pasos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          StepsContainer(
+            steps: steps, 
+            controllers: stepsControllers,
+            editable: isEditing,
+            onTap: () {
+              setState(() {
+                steps.add('');
+              });
+            },
+          ),
         ],
       ),
     );
@@ -131,11 +180,13 @@ class TransparentTextBox extends StatelessWidget {
 class UnitsDropdown extends StatelessWidget {
   final bool enabled;
   final Function(String?)? onChanged;
-  const UnitsDropdown({super.key, this.enabled = true, this.onChanged});
+  final String? initialValue;
+  const UnitsDropdown({super.key, this.enabled = true, this.onChanged, this.initialValue});
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
+      value: initialValue,
       iconSize: 0,
       items: units.map((String value) {
         return DropdownMenuItem(
@@ -149,7 +200,74 @@ class UnitsDropdown extends StatelessWidget {
   }
 }
 
-void openDialog({required BuildContext context, required TextEditingController controller, String? name, num? quantity, String? unit}) {
+class StepsContainer extends StatelessWidget {
+  final List<String>? steps;
+  final List<TextEditingController>? controllers;
+  final bool editable;
+  final Function()? onTap;
+  const StepsContainer({super.key, this.steps, this.controllers, this.editable = false, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final stepsContainers = steps!.mapIndexed((int index, String step) => 
+      Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black54)
+        ),
+        height: 32,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('${index + 1}.', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: TransparentTextBox(
+                controller: controllers![index],
+                editable: editable,
+                showUnderline: false,
+                maxLines: 3,
+                fontSize: 12,
+              ),
+            ),
+            if (editable) IconButton(onPressed: () {print('Eliminado $index');}, icon: Icon(Icons.close, color: Colors.grey[600]), iconSize: 16, padding: const EdgeInsets.all(0), visualDensity: VisualDensity.compact),
+          ],
+        )
+      ),
+    ).toList();
+
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          ...stepsContainers,
+          if (steps!.isEmpty) const Text('No hay pasos'),
+          if (editable) InkWell(
+            onTap: onTap,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black54)
+              ),
+              height: 32,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.add, color: Colors.grey[600], size: 16)],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+void openDialog({required BuildContext context, required Function(String name, num quantity, String unit) saveIngredient, String? name, num? quantity, String? unit}) {
+  final TextEditingController ingredientNameController = TextEditingController(text: name);
+  final TextEditingController ingredientQuantityController = TextEditingController(text: quantity.toString());
+  final TextEditingController ingredientUnitController = TextEditingController();
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -160,7 +278,7 @@ void openDialog({required BuildContext context, required TextEditingController c
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextField(
-            controller: controller,
+            controller: ingredientNameController,
             decoration: const InputDecoration(
               labelText: 'Nombre',
               isDense: true,
@@ -168,11 +286,12 @@ void openDialog({required BuildContext context, required TextEditingController c
           ),
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 flex: 3,
                 child: TextField(
+                  controller: ingredientQuantityController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Cantidad',
                     isDense: true,
                   ),
@@ -182,8 +301,9 @@ void openDialog({required BuildContext context, required TextEditingController c
               Expanded(
                 flex: 2,
                 child: UnitsDropdown(
+                  initialValue: unit,
                   onChanged: (String? value) {
-                    print(value);
+                    ingredientUnitController.text = value!;
                   },
                 ),
               ),
@@ -193,10 +313,18 @@ void openDialog({required BuildContext context, required TextEditingController c
       ),
       actions: [
         TextButton(
-            onPressed: () => context.pop(),
+            onPressed: () {
+              context.pop();
+            },
             child: const Text('Cancelar')),
         FilledButton(
-            onPressed: () => context.pop(),
+            onPressed: () {
+              if (ingredientNameController.text.isEmpty || ingredientQuantityController.text.isEmpty || ingredientUnitController.text.isEmpty) {
+                return;
+              }
+              saveIngredient(ingredientNameController.text, num.parse(ingredientQuantityController.text), ingredientUnitController.text);
+              context.pop();
+            },
             child: const Text('Guardar cambios'))
       ],
     )
