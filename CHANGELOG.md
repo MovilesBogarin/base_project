@@ -15,7 +15,6 @@ Date: Nov XX, 2023
 ## V 1.0.0
 Date: Nov 05, 2023
 * [NEW]
-* [NEW]
   * Firebase implementation (Auth)
 
 ## V 0.0.1
