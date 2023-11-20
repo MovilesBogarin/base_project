@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../presentation/widgets/drawers/custom_drawer.dart';
+import 'package:http/http.dart' as http;
+
 
 import '../../static/static.dart';
+import 'dart:async';
+import 'dart:convert';
+
 
 class RecipesScreen extends StatefulWidget {
   const RecipesScreen({Key? key}) : super(key: key);
@@ -13,6 +18,23 @@ class RecipesScreen extends StatefulWidget {
 }
 
 class _RecipesScreenState extends State<RecipesScreen> with CustomAppBar, CustomDrawer {
+
+getRecipes() async{
+
+http.Response response = await http.get(Uri.parse('http://10.0.2.2:7000/api/recipes/'));
+debugPrint(response.body);
+print("Aqui veremos que pasa: "+ response.body);
+
+}
+
+@override
+initState(){
+  super.initState();
+  getRecipes();
+}
+
+
+
   List<Map<String,dynamic>> recipesList = recipes;
   @override
   Widget build(BuildContext context) {
