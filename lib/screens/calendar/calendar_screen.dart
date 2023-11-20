@@ -25,17 +25,16 @@ class CalendarScreen extends StatelessWidget with CustomAppBar, CustomDrawer {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            Text('Bienvenido, $email', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text('Bienvenido, $email',
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),
             TableCalendar(
               firstDay: DateTime.utc(pastYear, 1, 1),
               lastDay: DateTime.utc(nextYear, 12, 31),
               focusedDay: today,
             ),
-            TextButton(
-              onPressed: signOut, 
-              child: const Text('Cerrar Sesión')
-            ),
+            TextButton(onPressed: signOut, child: const Text('Cerrar Sesión')),
           ],
         ),
       ),
