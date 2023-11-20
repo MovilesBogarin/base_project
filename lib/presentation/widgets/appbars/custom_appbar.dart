@@ -4,11 +4,12 @@ mixin CustomAppBar {
   AppBar appBarSimple({String title = '', IconButton? button}) =>
     AppBar(
       title: Text(title),
-      automaticallyImplyLeading: false, // Establece esto en false para ocultar el botón de retorno
+      automaticallyImplyLeading: false,
       actions: button != null ? [button] : null,
     );
-    AppBar appBarWithReturnButton({String title = '', IconButton? button}) => AppBar(
+    AppBar appBarWithReturnButton({String title = '', IconButton? button, bool returnButtonEnabled = true}) => AppBar(
       title: Text(title), 
+      automaticallyImplyLeading: returnButtonEnabled,
       actions: button != null ? [button] : null,
     );
     AppBar appBarWithMenuButton({String title = '', IconButton? button}) => AppBar(

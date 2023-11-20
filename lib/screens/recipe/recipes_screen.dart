@@ -13,9 +13,9 @@ class RecipesScreen extends StatefulWidget {
 }
 
 class _RecipesScreenState extends State<RecipesScreen> with CustomAppBar, CustomDrawer {
-  List<Map<String,dynamic>> recipesList = recipes;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
+    List<Map<String,dynamic>> recipesList = recipes;
     return Scaffold(
       appBar: appBarWithMenuButton(title: 'Recetas'),
       drawer: drawerSimple(),
@@ -36,17 +36,19 @@ class _RecipesScreenState extends State<RecipesScreen> with CustomAppBar, Custom
               ),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 final newId = recipesList.length + 1;
                 recipesList.add({
                   'id': newId,
-                  'name': 'Receta $newId',
-                  'description': 'Descripción de la receta $newId',
+                  'name': 'Nueva receta',
+                  'description': 'Nueva descripción',
+                  'ingredients': <Map<String, dynamic>>[],
+                  'steps': <String>[],
                 });
+                await context.push('/recipes/$newId');
                 setState(() {
                   recipesList = recipesList;
                 });
-                context.push('/recipes/$newId');
               },
               child: const Icon(Icons.add),
             ),

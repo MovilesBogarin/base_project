@@ -24,8 +24,8 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
 
   void saveIngredient(String name, num quantity, String unit) {
     final List<Map<String,dynamic>> ingredients = currentRecipe['ingredients'];
-    final Map<String,dynamic> ingredient = ingredients.where((element) => element['name'] == name).first;
-    if (ingredient['name'] != name || ingredient['quantity'] != quantity || ingredient['unit'] != unit) {
+    final List<Map<String,dynamic>> ingredientsFound = ingredients.where((element) => element['name'] == name).toList();
+    if (ingredientsFound.isNotEmpty) {
       recipeHasIngredientChanges = true;
       setState(() {
         currentRecipe['ingredients'] = ingredients.map((Map<String,dynamic> ingrediente) {
@@ -36,6 +36,10 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
           }
           return ingrediente;
         }).toList();
+      });
+    } else {
+      setState(() {
+        currentRecipe['ingredients'].add({'name': name, 'quantity': quantity, 'unit': unit});
       });
     }
   }
@@ -82,6 +86,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
 
     return Scaffold(
       appBar: appBarWithReturnButton( 
+        returnButtonEnabled: !isEditing,
         button: IconButton(onPressed: () {
           setState(() {
             if (isEditing) {
@@ -97,24 +102,26 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           TransparentTextBox(
-            editable: isEditing,
+            isEditing: isEditing,
             controller: _recipeNameController,
             fontSize: 24,
             bold: true,
           ),
           const SizedBox(height: 8),
           TransparentTextBox(
-            editable: isEditing,
+            isEditing: isEditing,
             controller: _recipeDescriptionController,
             maxLines: 3,
             fontSize: 12,
           ),
           const SizedBox(height: 8),
+          const Text('Ingredientes', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           Wrap(
             spacing: 4,
             runSpacing: 4,
             children: [
               ...ingredientsChipsList,
+              if (!isEditing && ingredientsChipsList.isEmpty) const Text('No hay ingredientes'),
               if (isEditing) IconButton(
                 onPressed: () {
                   openDialog(context: context, saveIngredient: saveIngredient);
@@ -134,10 +141,23 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
           const SizedBox(height: 16),
           const Text('Pasos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           StepsContainer(
-            steps: steps, 
-            controllers: stepsControllers,
-            editable: isEditing,
-            onTap: () {
+            stepsContainers: steps.mapIndexed((int index, String element) => 
+              StepRow(
+                index: index,
+                controller: stepsControllers[index],
+                isEditing: isEditing,
+                onDelete: () {
+                  setState(() {
+                    steps.removeAt(index);
+                  });
+                },
+              )
+            ).toList(),
+            isEditing: isEditing,
+            onAddStep: () {
+              stepsControllers.forEachIndexed((int index, TextEditingController stepController) {
+                steps[index] = stepController.text;
+              });
               setState(() {
                 steps.add('');
               });
@@ -150,7 +170,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
 }
 
 class TransparentTextBox extends StatelessWidget {
-  final bool editable;
+  final bool isEditing;
   final TextEditingController controller;
   final bool showUnderline;
   final int maxLines;
@@ -158,16 +178,16 @@ class TransparentTextBox extends StatelessWidget {
   final bool bold;
   final Color color;
 
-  const TransparentTextBox({super.key, this.editable = true, required this.controller, this.showUnderline = true, this.maxLines = 1, this.fontSize, this.bold = false, this.color = Colors.black});  
+  const TransparentTextBox({super.key, this.isEditing = true, required this.controller, this.showUnderline = true, this.maxLines = 1, this.fontSize, this.bold = false, this.color = Colors.black});  
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      enabled: editable,
+      enabled: isEditing,
       maxLines: maxLines,
       minLines: 1,
       decoration: InputDecoration(
-        border: editable && showUnderline ? const UnderlineInputBorder() : InputBorder.none,
+        border: isEditing && showUnderline ? const UnderlineInputBorder() : InputBorder.none,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0)
       ),
@@ -200,50 +220,67 @@ class UnitsDropdown extends StatelessWidget {
   }
 }
 
-class StepsContainer extends StatelessWidget {
-  final List<String>? steps;
-  final List<TextEditingController>? controllers;
-  final bool editable;
-  final Function()? onTap;
-  const StepsContainer({super.key, this.steps, this.controllers, this.editable = false, this.onTap});
+class StepRow extends StatelessWidget {
+  final int index;
+  final TextEditingController controller;
+  final bool isEditing;
+  final Function()? onDelete;
+  const StepRow({super.key, required this.index, required this.controller, this.isEditing = false, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
-    final stepsContainers = steps!.mapIndexed((int index, String step) => 
-      Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black54)
-        ),
-        height: 32,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('${index + 1}.', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-            const SizedBox(width: 8),
-            Expanded(
-              child: TransparentTextBox(
-                controller: controllers![index],
-                editable: editable,
-                showUnderline: false,
-                maxLines: 3,
-                fontSize: 12,
-              ),
-            ),
-            if (editable) IconButton(onPressed: () {print('Eliminado $index');}, icon: Icon(Icons.close, color: Colors.grey[600]), iconSize: 16, padding: const EdgeInsets.all(0), visualDensity: VisualDensity.compact),
-          ],
-        )
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black54)
       ),
-    ).toList();
+      height: 32,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('${index + 1}.', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TransparentTextBox(
+              controller: controller,
+              isEditing: isEditing,
+              showUnderline: false,
+              maxLines: 3,
+              fontSize: 12,
+            ),
+          ),
+          if (isEditing) IconButton(
+              onPressed: onDelete,
+              icon: Icon(
+                Icons.close, 
+                color: Colors.grey[600]
+              ), 
+              iconSize: 16, 
+              padding: const EdgeInsets.all(0), 
+              visualDensity: VisualDensity.compact
+            ),
+        ],
+      )
+    );
+  }
+}
 
+class StepsContainer extends StatelessWidget {
+  final List<Widget>? stepsContainers;
+  final bool isEditing;
+  final Function()? onAddStep;
+  const StepsContainer({super.key, this.stepsContainers, this.isEditing = false, this.onAddStep});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Column(
         children: [
-          ...stepsContainers,
-          if (steps!.isEmpty) const Text('No hay pasos'),
-          if (editable) InkWell(
-            onTap: onTap,
+          ...?stepsContainers,
+          if (stepsContainers!.isEmpty && !isEditing) const Text('No hay pasos'),
+          if (isEditing) InkWell(
+            onTap: onAddStep,
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             child: Container(
@@ -264,7 +301,7 @@ class StepsContainer extends StatelessWidget {
   }
 }
 
-void openDialog({required BuildContext context, required Function(String name, num quantity, String unit) saveIngredient, String? name, num? quantity, String? unit}) {
+void openDialog({required BuildContext context, required Function(String name, num quantity, String unit) saveIngredient, String? name, num quantity = 0, String? unit}) {
   final TextEditingController ingredientNameController = TextEditingController(text: name);
   final TextEditingController ingredientQuantityController = TextEditingController(text: quantity.toString());
   final TextEditingController ingredientUnitController = TextEditingController();
