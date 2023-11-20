@@ -9,10 +9,12 @@ Date: Nov XX, 2023
 * [NEW]
   * Blank calendar screen and drawer menu
   * Recipes screen and edit recipe screen
+* [UPDATE]
   * Logout bugfix
 
 ## V 1.0.0
 Date: Nov 05, 2023
+* [NEW]
 * [NEW]
   * Firebase implementation (Auth)
 
