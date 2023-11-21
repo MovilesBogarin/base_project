@@ -1,19 +1,13 @@
+import 'package:base_project/static/static.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../presentation/widgets/drawers/custom_drawer.dart';
-<<<<<<< HEAD
+
 import 'package:http/http.dart' as http;
-
-
-import '../../static/static.dart';
-import 'dart:async';
-import 'dart:convert';
-
-=======
 import '../../presentation/recipes/recipes_presenter.dart';
 import '../../domain/dtos/recipe_dto.dart';
->>>>>>> b3c96b22eaf22fd591c4d9e1d8871aca2aaf40ac
+
 
 class RecipesScreen extends StatefulWidget {
   const RecipesScreen({Key? key}) : super(key: key);
@@ -23,7 +17,6 @@ class RecipesScreen extends StatefulWidget {
 }
 
 class _RecipesScreenState extends State<RecipesScreen> with CustomAppBar, CustomDrawer {
-<<<<<<< HEAD
 
 getRecipes() async{
 
@@ -40,11 +33,10 @@ initState(){
 }
 
 
+  //List<Map<String,dynamic>> recipesList = recipes;
 
-  List<Map<String,dynamic>> recipesList = recipes;
-=======
   List<Recipe> recipesList = RecipesPresenter().getRecipes();
->>>>>>> b3c96b22eaf22fd591c4d9e1d8871aca2aaf40ac
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
