@@ -1,4 +1,3 @@
-
 class Recipe {
   final int id;
   final String name;
@@ -8,5 +7,6 @@ class Recipe {
     required this.id,
     required this.name,
     required this.description,
+    required int _id,
   });
 }

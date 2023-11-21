@@ -9,8 +9,9 @@ router.get("/api/recipes", async (req, res) => {
 
 router.get("/api/recipes/create", (req, res) => {
   Recipes.create({
-    email: "javier@jaja.com",
-    description: "Chamwish",
+    name: "Chamwish",
+    email: "daniel@jaja.com",
+    description: "Chamwish normalito uwu",
     ingredientes: [
       { name: "Pan", quantity: 2, unit: "pz" },
       { name: "Lechuga", quantity: 1, unit: "hja" },

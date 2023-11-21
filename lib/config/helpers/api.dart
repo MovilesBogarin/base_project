@@ -1,12 +1,17 @@
+import 'package:base_project/static/noStatic.dart';
+
 import '../../static/static.dart';
 import '../../domain/dtos/recipe_dto.dart';
 import '../../models/recipe/recipe_model.dart';
 
 class FoodStructuredAPI {
   List<Recipe> getRecipes() {
-    return recipes.map((recipe) { 
-      final recipeModel = RecipeModel.fromJson(recipe);
-      return Recipe(id: recipeModel.id, name: recipeModel.name, description: recipeModel.description);
+    return getRecipesApi().map((getRecipesApi()) {
+      final recipeModel = RecipeModel.fromJson(getRecipesApi());
+      return Recipe(
+          id: recipeModel._id,
+          name: recipeModel.name,
+          description: recipeModel.description);
     }).toList();
   }
 
@@ -18,6 +23,9 @@ class FoodStructuredAPI {
     };
     recipes.add(newRecipe);
     final recipeModel = RecipeModel.fromJson(newRecipe);
-    return Recipe(id: recipeModel.id, name: recipeModel.name, description: recipeModel.description);
+    return Recipe(
+        id: recipeModel.id,
+        name: recipeModel.name,
+        description: recipeModel.description);
   }
 }

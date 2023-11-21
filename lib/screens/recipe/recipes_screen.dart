@@ -23,16 +23,6 @@ class _RecipesScreenState extends State<RecipesScreen>
   late Map data;
   late List recipesData;
   final String? email = Auth().currentUser?.email;
-  getRecipes() async {
-    http.Response response = await http.get(Uri.parse(
-        'https://render-foodstructured.onrender.com/api/recipes/$email'));
-    debugPrint(response.body);
-    print("Aqui veremos que pasa: " + response.body + '$email');
-    data = json.decode(response.body);
-    setState(() {
-      recipesData = ['recipes'];
-    });
-  }
 
   @override
   initState() {
