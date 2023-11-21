@@ -1,15 +1,19 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
+function connect() {
+    mongoose.connect(
+        'mongodb+srv://FoodStructure:1234@cluster0.llczuuy.mongodb.net/NombreDeTuBaseDeDatos', 
+        {
+            useUnifiedTopology: true,
+        }
+    );
 
-function connect(){
+    const db = mongoose.connection;
 
-    mongoose.connect(`mongodb+srv://FoodStructure:1234@cluster0.llczuuy.mongodb.net/?retryWrites=true&w=majority`, 
-    {
-
-            useNewUrlParser:true
-   
-    })
-    console.log('Database: Connected')
+    db.on('error', console.error.bind(console, 'Connection error:'));
+    db.once('open', () => {
+        console.log('Database connected');
+    });
 }
 
-module.exports = {connect}
+module.exports = { connect };
