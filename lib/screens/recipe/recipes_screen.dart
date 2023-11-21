@@ -1,13 +1,15 @@
 import 'package:base_project/static/static.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../config/auth/auth.dart';
 import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../presentation/widgets/drawers/custom_drawer.dart';
 
 import 'package:http/http.dart' as http;
 import '../../presentation/recipes/recipes_presenter.dart';
 import '../../domain/dtos/recipe_dto.dart';
-
+import 'dart:async';
+import 'dart:convert';
 
 class RecipesScreen extends StatefulWidget {
   const RecipesScreen({Key? key}) : super(key: key);
@@ -16,22 +18,27 @@ class RecipesScreen extends StatefulWidget {
   State<RecipesScreen> createState() => _RecipesScreenState();
 }
 
-class _RecipesScreenState extends State<RecipesScreen> with CustomAppBar, CustomDrawer {
+class _RecipesScreenState extends State<RecipesScreen>
+    with CustomAppBar, CustomDrawer {
+  late Map data;
+  late List recipesData;
+  final String? email = Auth().currentUser?.email;
+  getRecipes() async {
+    http.Response response = await http.get(Uri.parse(
+        'https://render-foodstructured.onrender.com/api/recipes/$email'));
+    debugPrint(response.body);
+    print("Aqui veremos que pasa: " + response.body + '$email');
+    data = json.decode(response.body);
+    setState(() {
+      recipesData = ['recipes'];
+    });
+  }
 
-getRecipes() async{
-
-http.Response response = await http.get(Uri.parse('http://10.0.2.2:7000/api/recipes/'));
-debugPrint(response.body);
-print("Aqui veremos que pasa: "+ response.body);
-
-}
-
-@override
-initState(){
-  super.initState();
-  getRecipes();
-}
-
+  @override
+  initState() {
+    super.initState();
+    getRecipes();
+  }
 
   //List<Map<String,dynamic>> recipesList = recipes;
 
