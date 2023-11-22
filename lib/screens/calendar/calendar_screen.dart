@@ -1,3 +1,4 @@
+import 'package:base_project/config/helpers/dateFormater.dart';
 import 'package:base_project/presentation/calendar/calendar_presenter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,7 @@ class CalendarScreen extends StatefulWidget {
 class CalendarState extends State<CalendarScreen>
     with CustomAppBar, CustomDrawer {
   final String? email = Auth().currentUser?.email;
+
   DateTime today = DateTime.now();
   DateTime? _selecteDay;
   DateTime? RangeStart;
@@ -60,10 +62,52 @@ class CalendarState extends State<CalendarScreen>
                 const SizedBox(height: 20),
                 tableCalendarCustom(
                     RangeStart, RangeFinish, _onDaysSelected, today),
-                const SizedBox(height: 80),
-                TextButton(
-                    onPressed: () {},
-                    child: const Text('Este boton hara algo :) ')),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 229, 195, 166),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      )),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
+                  child: Column(
+                    children: [
+                      Text(
+                          // ignore: unnecessary_brace_in_string_interps, prefer_interpolation_to_compose_strings
+                          '${RangeStart != null ? RangeStart!.add(const Duration(days: 1)).fullDate() : ""}  ${RangeFinish != null ? 'to ' + RangeFinish!.add(const Duration(days: 1)).fullDate() : ""}',
+                          style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white)),
+                      const SizedBox(height: 30),
+                      Container(
+                        decoration: const BoxDecoration(
+                            color: Color.fromARGB(255, 54, 60, 102),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
+                            )),
+                        child: TextButton(
+                            style: TextButton.styleFrom(
+                                textStyle:
+                                    const TextStyle(color: Colors.white)),
+                            onPressed: () {
+                              context.push('/calendar/recipes');
+                            },
+                            child: const Text(
+                              'Agregar a estos dias :) ',
+                              style: TextStyle(color: Colors.white),
+                            )),
+                      ),
+                    ],
+                  ),
+                ),
                 TextButton(
                     onPressed: signOut, child: const Text('Cerrar Sesión')),
               ],
@@ -72,3 +116,4 @@ class CalendarState extends State<CalendarScreen>
         ));
   }
 }
+// ${RangeStart != null ? RangeStart!.fullDate() : ""}

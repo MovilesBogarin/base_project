@@ -1,15 +1,9 @@
-import 'package:base_project/static/static.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../config/auth/auth.dart';
 import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../presentation/widgets/drawers/custom_drawer.dart';
 
-import 'package:http/http.dart' as http;
-import '../../presentation/recipes/recipes_presenter.dart';
-import '../../domain/dtos/recipe_dto.dart';
-import 'dart:async';
-import 'dart:convert';
+import '../../static/static.dart';
 
 class RecipesScreen extends StatefulWidget {
   const RecipesScreen({Key? key}) : super(key: key);
@@ -20,20 +14,7 @@ class RecipesScreen extends StatefulWidget {
 
 class _RecipesScreenState extends State<RecipesScreen>
     with CustomAppBar, CustomDrawer {
-  late Map data;
-  late List recipesData;
-  final String? email = Auth().currentUser?.email;
-
-  @override
-  initState() {
-    super.initState();
-    getRecipes();
-  }
-
-  //List<Map<String,dynamic>> recipesList = recipes;
-
-  List<Recipe> recipesList = RecipesPresenter().getRecipes();
-
+  List<Map<String, dynamic>> recipesList = recipes;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,22 +27,27 @@ class _RecipesScreenState extends State<RecipesScreen>
               child: ListView.builder(
                 itemCount: recipesList.length,
                 itemBuilder: (context, index) {
-                  final Recipe recipe = recipesList[index];
+                  final Map<String, dynamic> recipe = recipesList[index];
                   return ListTile(
-                    title: Text(recipe.name),
-                    subtitle: Text(recipe.description),
-                    onTap: () => context.push('/recipes/${recipe.id}'),
+                    title: Text(recipe['name']),
+                    subtitle: Text(recipe['description']),
+                    onTap: () => context.push('/recipes/${recipe['id']}'),
                   );
                 },
               ),
             ),
             ElevatedButton(
               onPressed: () {
-                final newRecipe = RecipesPresenter().addRecipe();
-                setState(() {
-                  recipesList = RecipesPresenter().getRecipes();
+                final newId = recipesList.length + 1;
+                recipesList.add({
+                  'id': newId,
+                  'name': 'Receta $newId',
+                  'description': 'Descripción de la receta $newId',
                 });
-                context.push('/recipes/${newRecipe.id}');
+                setState(() {
+                  recipesList = recipesList;
+                });
+                context.push('/recipes/$newId');
               },
               child: const Icon(Icons.add),
             ),
