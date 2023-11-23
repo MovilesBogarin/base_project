@@ -32,9 +32,12 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/calendar/recipes',
+      path: '/recipes/clendar/:date1/:date2',
       builder: (BuildContext context, GoRouterState state) {
-        return const CalenderRecipe();
+        return CalenderRecipe(
+          date1: state.pathParameters['date1']!,
+          date2: state.pathParameters['date2']!,
+        );
       },
     ),
     GoRoute(
