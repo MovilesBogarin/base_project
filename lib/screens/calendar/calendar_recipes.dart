@@ -1,4 +1,5 @@
 import 'package:base_project/presentation/widgets/inputs/Custom_Button.dart';
+import 'package:base_project/static/noStatic.dart';
 import 'package:base_project/static/static.dart';
 import 'package:flutter/material.dart';
 import '../../presentation/widgets/appbars/custom_appbar.dart';
@@ -16,6 +17,8 @@ class CalenderRecipe extends StatefulWidget {
 class _CalendarRecipesScreenState extends State<CalenderRecipe>
     with CustomAppBar {
   List<Map<String, dynamic>> recipesList = recipes;
+  List data = getRecipesApi();
+  String currentRecipe = 'Escoge una de tus recetas :)';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,13 +59,33 @@ class _CalendarRecipesScreenState extends State<CalenderRecipe>
                           })
                     ],
                   ),
-                )
+                ),
+
+
+                const SizedBox(height: 30),
+
+              DropdownButton(
+              value: currentRecipe,
+              
+              items: data.map((e) {
+                return DropdownMenuItem(child: Text(e['name']))
+              }),
+              onChanged: (value) => {currentRecipe = value as String},)
+
+
+
+
+
+
               ],
             ),
           )),
     );
   }
 }
+
+
+
 /*
                         final newId = recipesList.length + 1;
                         recipesList.add({
