@@ -1,8 +1,8 @@
-import 'package:base_project/presentation/widgets/inputs/Custom_Button.dart';
 import 'package:base_project/static/static.dart';
 import 'package:flutter/material.dart';
 import '../../presentation/widgets/appbars/custom_appbar.dart';
-import '../../presentation/widgets/drawers/custom_drawer.dart';
+
+import 'package:dropdown_search/dropdown_search.dart';
 
 class CalenderRecipe extends StatefulWidget {
   final String? date1;
@@ -16,6 +16,8 @@ class CalenderRecipe extends StatefulWidget {
 class _CalendarRecipesScreenState extends State<CalenderRecipe>
     with CustomAppBar {
   List<Map<String, dynamic>> recipesList = recipes;
+  String? recipeController;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,31 +34,16 @@ class _CalendarRecipesScreenState extends State<CalenderRecipe>
                         fontWeight: FontWeight.w900,
                         color: Colors.red)),
                 const SizedBox(height: 30),
-                Container(
-                  decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 229, 195, 166),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
-                      )),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
-                  child: Column(
-                    children: <Widget>[
-                      ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: recipesList.length,
-                          itemBuilder: (context, index) {
-                            final Map<String, dynamic> recipe =
-                                recipesList[index];
-                            return Text(recipe['description']);
-                          })
-                    ],
-                  ),
-                )
+                DropdownSearch(
+                    //recipes.map((e) => e['name']).toList()
+                    items: recipes.map((e) => e['name']).toList(),
+                    onChanged: ((value) {
+                      setState(() {
+                        recipeController = value.toString();
+                      });
+                    })),
+                //Text(recipeController!),
+                const SizedBox(height: 30),
               ],
             ),
           )),
