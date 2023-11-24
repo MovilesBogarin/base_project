@@ -16,15 +16,18 @@ class MenuItem {
 
 List<MenuItem> appMenuItems = <MenuItem>[
   const MenuItem(
-    title: 'Calendario',
-    subTitle: 'Ver y asignar recetas en tu calendario.',
-    link: '/calendar',
-    icon: Icons.calendar_today_rounded
-  ),
+      title: 'Calendario',
+      subTitle: 'Ver y asignar recetas en tu calendario.',
+      link: '/calendar',
+      icon: Icons.calendar_today_rounded),
   const MenuItem(
-    title: 'Recetas',
-    subTitle: 'Ver y crear recetas.',
-    link: '/recipes',
-    icon: Icons.restaurant_rounded
-  ),
+      title: 'Recetas',
+      subTitle: 'Ver y crear recetas.',
+      link: '/recipes',
+      icon: Icons.restaurant_rounded),
+  const MenuItem(
+      title: 'Cerrar Sesion',
+      subTitle: 'Ver y crear recetas.',
+      link: '/login',
+      icon: Icons.logout),
 ];

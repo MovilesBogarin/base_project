@@ -1,6 +1,8 @@
 import 'package:base_project/config/helpers/dateFormater.dart';
 import 'package:base_project/presentation/calendar/calendar_presenter.dart';
 import 'package:base_project/presentation/widgets/inputs/Custom_Button.dart';
+import 'package:base_project/static/static.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -48,6 +50,13 @@ class CalendarState extends State<CalendarScreen>
     await Auth().signOut();
   }
 
+  List<Map<String, dynamic>> recipesList = recipes;
+  List recipesSeleted = [];
+
+  String currentRecipe = 'Escoge una de tus recetas :)';
+
+  String? recipeController;
+  final ScrollController _scrollControler = ScrollController();
   late final MenuItem menuItem;
   @override
   Widget build(BuildContext context) {
@@ -58,52 +67,77 @@ class CalendarState extends State<CalendarScreen>
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: Container(
             decoration: bodyCustom(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            child: Wrap(
+              alignment: WrapAlignment.center,
               children: [
                 const SizedBox(height: 20),
                 Text('Bienvenido, $email',
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 tableCalendarCustom(
                     RangeStart, RangeFinish, _onDaysSelected, today),
-                const SizedBox(height: 20),
-                Container(
-                  decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 229, 195, 166),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
-                      )),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
-                  child: Column(
-                    children: [
-                      Text(
-                          '${formatDate(RangeStart)} ${RangeFinish != null ? 'to ' + formatDate(RangeFinish) : ''}',
-                          style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.white)),
-                      const SizedBox(height: 30),
-                      Custom_Button(
-                        txt: 'Agregar recetas',
-                        onPressed: () {
-                          var param1 = "${formatDate(RangeFinish)}";
-                          var param2 = "${formatDate(RangeStart)}";
-                          context.push('/recipes/clendar/$param1/$param2');
-                        },
-                      )
-                    ],
-                  ),
+                const SizedBox(height: 10),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                        '${formatDate(RangeStart)} ${RangeFinish != null ? 'to ' + formatDate(RangeFinish) : ''}',
+                        style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.black)),
+                    const SizedBox(height: 10),
+                    Custom_Button(
+                      txt: 'Agregar recetas',
+                      onPressed: () {
+                        var date1 = "${formatDate(RangeFinish)}";
+                        var date2 = "${formatDate(RangeStart)}";
+                        var recipeParam = recipesSeleted.toString();
+                        context.push(
+                            '/recipes/clendar/$date1/$date2/$recipeParam');
+                      },
+                    ),
+                    Text(recipesSeleted.toString())
+                  ],
                 ),
-                const SizedBox(height: 110),
-                TextButton(
-                    onPressed: signOut, child: const Text('Cerrar Sesión')),
-                const SizedBox(height: 30),
+                const SizedBox(height: 40),
+                DropdownSearch(
+                    //recipes.map((e) => e['name']).toList()
+                    items: recipes.map((e) => e['name']).toList(),
+                    onChanged: ((value) {
+                      setState(() {
+                        recipeController = value.toString();
+                        recipesSeleted.add(value);
+                      });
+                    })),
+                Column(
+                  children: <Widget>[
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: recipesSeleted.length,
+                        itemBuilder: (context, index) {
+                          return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  recipesSeleted[index],
+                                  style: TextStyle(),
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        recipesSeleted
+                                            .remove(recipesSeleted[index]);
+                                      });
+                                    },
+                                    icon: const Icon(Icons.delete))
+                              ]);
+                        }),
+                    TextButton(
+                        onPressed: signOut, child: const Text('Cerrar Sesión')),
+                  ],
+                ),
               ],
             ),
           ),

@@ -6,7 +6,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-late Map data;
+List data = [];
 final String? email = Auth().currentUser?.email;
 
 getRecipesApi() async {
@@ -14,7 +14,7 @@ getRecipesApi() async {
       'https://render-foodstructured.onrender.com/api/recipes/$email'));
   debugPrint(response.body);
   print("Aqui veremos que pasa: " + response.body + '$email');
-  data = json.decode(response.body);
+  data = jsonDecode(response.body);
   return data;
 }
 
