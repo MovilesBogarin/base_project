@@ -1,9 +1,11 @@
 import 'package:base_project/presentation/widgets/inputs/Custom_Button.dart';
 import 'package:base_project/static/noStatic.dart';
+
 import 'package:base_project/static/static.dart';
 import 'package:flutter/material.dart';
 import '../../presentation/widgets/appbars/custom_appbar.dart';
-import '../../presentation/widgets/drawers/custom_drawer.dart';
+
+import 'package:dropdown_search/dropdown_search.dart';
 
 class CalenderRecipe extends StatefulWidget {
   final String? date1;
@@ -17,8 +19,12 @@ class CalenderRecipe extends StatefulWidget {
 class _CalendarRecipesScreenState extends State<CalenderRecipe>
     with CustomAppBar {
   List<Map<String, dynamic>> recipesList = recipes;
+
   List data = getRecipesApi();
   String currentRecipe = 'Escoge una de tus recetas :)';
+
+  String? recipeController;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +41,7 @@ class _CalendarRecipesScreenState extends State<CalenderRecipe>
                         fontWeight: FontWeight.w900,
                         color: Colors.red)),
                 const SizedBox(height: 30),
+
                 Container(
                   decoration: const BoxDecoration(
                       color: Color.fromARGB(255, 229, 195, 166),
@@ -61,22 +68,18 @@ class _CalendarRecipesScreenState extends State<CalenderRecipe>
                   ),
                 ),
 
-
                 const SizedBox(height: 30),
 
-              DropdownButton(
-              value: currentRecipe,
-              
-              items: data.map((e) {
-                return DropdownMenuItem(child: Text(e['name']))
-              }),
-              onChanged: (value) => {currentRecipe = value as String},)
-
-
-
-
-
-
+                DropdownSearch(
+                    //recipes.map((e) => e['name']).toList()
+                    items: recipes.map((e) => e['name']).toList(),
+                    onChanged: ((value) {
+                      setState(() {
+                        recipeController = value.toString();
+                      });
+                    })),
+                //Text(recipeController!),
+                const SizedBox(height: 30),
               ],
             ),
           )),
