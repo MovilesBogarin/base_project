@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:go_router/go_router.dart';
 import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../presentation/widgets/chip/ingredient_chip.dart';
+import '../../presentation/widgets/containers/custom_container.dart';
 
 import '../../static/static.dart';
 
@@ -140,7 +141,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
           ),
           const SizedBox(height: 16),
           const Text('Pasos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          StepsContainer(
+          CustomContainer(
             stepsContainers: steps.mapIndexed((int index, String element) => 
               StepRow(
                 index: index,
@@ -261,42 +262,6 @@ class StepRow extends StatelessWidget {
             ),
         ],
       )
-    );
-  }
-}
-
-class StepsContainer extends StatelessWidget {
-  final List<Widget>? stepsContainers;
-  final bool isEditing;
-  final Function()? onAddStep;
-  const StepsContainer({super.key, this.stepsContainers, this.isEditing = false, this.onAddStep});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        children: [
-          ...?stepsContainers,
-          if (stepsContainers!.isEmpty && !isEditing) const Text('No hay pasos'),
-          if (isEditing) InkWell(
-            onTap: onAddStep,
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black54)
-              ),
-              height: 32,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.add, color: Colors.grey[600], size: 16)],
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

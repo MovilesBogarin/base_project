@@ -30,7 +30,12 @@ class _RecipesScreenState extends State<RecipesScreen> with CustomAppBar, Custom
                   return ListTile(
                     title: Text(recipe['name']),
                     subtitle: Text(recipe['description']),
-                    onTap: () => context.push('/recipes/${recipe['id']}'),
+                    onTap: () async {
+                      await context.push('/recipes/${recipe['id']}');
+                      setState(() {
+                        recipesList = recipesList;
+                      });
+                    },
                   );
                 },
               ),
