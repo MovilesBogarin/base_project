@@ -23,6 +23,8 @@ class _CalendarRecipesScreenState extends State<CalenderRecipe>
 
   String? recipeController;
 
+  final hahahaha = getRecipesApi();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +43,21 @@ class _CalendarRecipesScreenState extends State<CalenderRecipe>
                 const SizedBox(height: 30),
                 Text('${widget.recipeParam}'),
                 const SizedBox(height: 30),
+                FutureBuilder(
+                  future: hahahaha,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      print(snapshot.data);
+                      return Text('hola');
+                    } else if (snapshot.hasError) {
+                      print(snapshot.error);
+                      return Text('error');
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                )
               ],
             ),
           )),

@@ -1,4 +1,5 @@
 import 'package:base_project/config/auth/auth.dart';
+import 'package:base_project/models/recipe/recipe_model.dart';
 
 import 'package:flutter/material.dart';
 
@@ -6,16 +7,21 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-List data = [];
 final String? email = Auth().currentUser?.email;
 
-getRecipesApi() async {
+late final String data;
+
+Future<List<RecipeModel>> getRecipesApi() async {
   final response = await http.get(Uri.parse(
       'https://render-foodstructured.onrender.com/api/recipes/$email'));
-  debugPrint(response.body);
-  print("Aqui veremos que pasa: " + response.body + '$email');
-  data = jsonDecode(response.body);
-  return data;
-}
+  List<RecipeModel> recipesApi = [];
+  String body = utf8.decode(response.bodyBytes);
+  final jsonData = jsonDecode(body);
 
-final recipesApi = getRecipesApi();
+  for (var item in jsonData['recipes']) {
+    recipesApi.add(RecipeModel(
+        id: item['_id'], name: item['name'], description: item['description']));
+  }
+
+  return recipesApi;
+}
