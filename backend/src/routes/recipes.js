@@ -4,7 +4,7 @@ const Recipes = require("../models/recipes");
 
 router.get("/api/recipes", async (req, res) => {
   const recipes = await Recipes.find();
-  res.json(recipes);
+  res.json({ recipes });
 });
 
 router.get("/api/recipes/create", (req, res) => {
@@ -25,7 +25,7 @@ router.get("/api/recipes/create", (req, res) => {
 
 router.get("/api/recipes/:id", async (req, res) => {
   const recipes = await Recipes.find({ email: req.params.id });
-  res.json(recipes);
+  res.json({ recipes });
 });
 
 module.exports = router;
