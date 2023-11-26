@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
 mixin CustomAppBar {
-  AppBar appBarSimple({String title = 'no tiene Titulo'}) =>
+  AppBar appBarSimple({String title = '', IconButton? button}) =>
     AppBar(
       title: Text(title),
-      automaticallyImplyLeading: false, // Establece esto en false para ocultar el botón de retorno
+      automaticallyImplyLeading: false,
+      actions: button != null ? [button] : null,
     );
-    AppBar appBarWithReturnButton({String title = 'no tiene Titulo'}) => AppBar(
+    AppBar appBarWithReturnButton({String title = '', IconButton? button, bool returnButtonEnabled = true}) => AppBar(
       title: Text(title), 
+      automaticallyImplyLeading: returnButtonEnabled,
+      actions: button != null ? [button] : null,
     );
-    AppBar appBarWithMenuButton({String title = 'no tiene Titulo'}) => AppBar(
+    AppBar appBarWithMenuButton({String title = '', IconButton? button}) => AppBar(
       title: Text(title),
       leading: Builder(
         builder: (BuildContext context) {
@@ -20,5 +23,6 @@ mixin CustomAppBar {
           );
         },
       ),
+      actions: button != null ? [button] : null,
     );
 }
