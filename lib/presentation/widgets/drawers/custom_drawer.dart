@@ -8,15 +8,14 @@ mixin CustomDrawer {
     return _CustomListTitle(menuItem: menuItem);
   }
 
-  Drawer drawerSimple() =>
-    Drawer(
-      child: SafeArea(
-        child: ListView.builder(
-          itemCount: appMenuItems.length,
-          itemBuilder: menuList,
+  Drawer drawerSimple() => Drawer(
+        child: SafeArea(
+          child: ListView.builder(
+            itemCount: appMenuItems.length,
+            itemBuilder: menuList,
+          ),
         ),
-      ),
-    );
+      );
 }
 
 class _CustomListTitle extends StatelessWidget {

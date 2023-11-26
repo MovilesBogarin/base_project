@@ -39,6 +39,11 @@ dependencies:
   firebase_core: ^2.21.0
   firebase_auth: ^4.12.1
   table_calendar: ^3.0.9
+  http: any
+  intl: ^0.18.1
+  dropdown_search: ^5.0.6
+  dio: ^5.3.4
+  flutter_riverpod: ^2.4.8
   collection: ^1.17.2
 
 dev_dependencies:

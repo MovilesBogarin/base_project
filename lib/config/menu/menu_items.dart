@@ -25,4 +25,9 @@ List<MenuItem> appMenuItems = <MenuItem>[
       subTitle: 'Ver y crear recetas.',
       link: '/recipes',
       icon: Icons.restaurant_rounded),
+  const MenuItem(
+      title: 'Cerrar Sesion',
+      subTitle: 'Ver y crear recetas.',
+      link: '/login',
+      icon: Icons.logout),
 ];

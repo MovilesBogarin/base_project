@@ -12,7 +12,9 @@ class RecipesScreen extends StatefulWidget {
   State<RecipesScreen> createState() => _RecipesScreenState();
 }
 
-class _RecipesScreenState extends State<RecipesScreen> with CustomAppBar, CustomDrawer {
+class _RecipesScreenState extends State<RecipesScreen>
+    with CustomAppBar, CustomDrawer {
+  List<Map<String, dynamic>> recipesList = recipes;
   @override
   Widget build(BuildContext context) {    
     List<Map<String,dynamic>> recipesList = recipes;
