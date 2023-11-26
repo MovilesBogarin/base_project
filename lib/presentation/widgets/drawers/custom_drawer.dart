@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../providers/login_provider.dart';
 import '../../../config/menu/menu_items.dart';
 
 mixin CustomDrawer {
@@ -8,11 +9,22 @@ mixin CustomDrawer {
     return _CustomListTitle(menuItem: menuItem);
   }
 
-  Drawer drawerSimple() => Drawer(
+  Drawer drawerSimple(BuildContext context) => Drawer(
         child: SafeArea(
-          child: ListView.builder(
-            itemCount: appMenuItems.length,
-            itemBuilder: menuList,
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: appMenuItems.length,
+                  itemBuilder: menuList,
+                ),
+              ),
+              TextButton(onPressed: () {
+                LoginProvider.signOut();
+                context.go('/widgetTree');
+              }, 
+              child: const Text('Cerrar sesión', style: TextStyle(fontWeight: FontWeight.bold),))
+            ]
           ),
         ),
       );
