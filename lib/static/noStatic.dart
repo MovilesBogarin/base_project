@@ -1,7 +1,5 @@
-import 'package:base_project/config/auth/auth.dart';
+import '../config/auth/auth.dart';
 import 'package:base_project/models/recipe/recipe_model.dart';
-
-import 'package:flutter/material.dart';
 
 import 'dart:convert';
 

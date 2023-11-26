@@ -42,6 +42,8 @@ dependencies:
   http: any
   intl: ^0.18.1
   dropdown_search: ^5.0.6
+  dio: ^5.3.4
+  flutter_riverpod: ^2.4.8
 
 dev_dependencies:
   flutter_test:

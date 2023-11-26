@@ -4,11 +4,7 @@ import 'package:table_calendar/table_calendar.dart';
 BoxDecoration bodyCustom() {
   return (const BoxDecoration(
       color: Color.fromARGB(255, 255, 255, 255),
-      borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-          bottomLeft: Radius.circular(10),
-          bottomRight: Radius.circular(10))));
+      borderRadius: BorderRadius.all(Radius.circular(10))));
 }
 
 TableCalendar tableCalendarCustom(DateTime? rangeStart, DateTime? rangeFinish,
