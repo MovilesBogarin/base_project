@@ -18,7 +18,7 @@ List<MenuItem> appMenuItems = <MenuItem>[
   const MenuItem(
       title: 'Calendario',
       subTitle: 'Ver y asignar recetas en tu calendario.',
-      link: '/calendar',
+      link: '/widgetTree',
       icon: Icons.calendar_today_rounded),
   const MenuItem(
       title: 'Recetas',
