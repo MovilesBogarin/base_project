@@ -20,7 +20,7 @@ class _RecipesScreenState extends State<RecipesScreen>
     List<Map<String,dynamic>> recipesList = recipes;
     return Scaffold(
       appBar: appBarWithMenuButton(title: 'Recetas'),
-      drawer: drawerSimple(),
+      drawer: drawerSimple(context),
       body: SafeArea(
         child: Column(
           children: [

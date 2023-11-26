@@ -9,7 +9,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../presentation/widgets/drawers/custom_drawer.dart';
-import '../../config/auth/auth.dart';
 import '../../../config/menu/menu_items.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -20,7 +19,6 @@ class CalendarScreen extends StatefulWidget {
 
 class CalendarState extends State<CalendarScreen>
     with CustomAppBar, CustomDrawer {
-  final String? email = Auth().currentUser?.email;
 
   DateTime today = DateTime.now();
   DateTime? _selecteDay;
@@ -46,10 +44,6 @@ class CalendarState extends State<CalendarScreen>
     });
   }
 
-  Future<void> signOut() async {
-    await Auth().signOut();
-  }
-
   List<Map<String, dynamic>> recipesList = recipes;
   List recipesSeleted = [];
 
@@ -62,7 +56,7 @@ class CalendarState extends State<CalendarScreen>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: appBarWithMenuButton(title: 'Calendario'),
-        drawer: drawerSimple(),
+        drawer: drawerSimple(context),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: Container(
@@ -71,25 +65,15 @@ class CalendarState extends State<CalendarScreen>
               alignment: WrapAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                Text('Bienvenido, $email',
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 10),
                 tableCalendarCustom(
                     RangeStart, RangeFinish, _onDaysSelected, today),
                 const SizedBox(height: 10),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                        '${formatDate(RangeStart)} ${RangeFinish != null ? 'to ' + formatDate(RangeFinish) : ''}',
-                        style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.black)),
                     const SizedBox(height: 10),
                     Custom_Button(
-                      txt: 'Agregar recetas',
+                      txt: 'Generar reporte',
                       onPressed: () {
                         var date1 = "${formatDate(RangeFinish)}";
                         var date2 = "${formatDate(RangeStart)}";
@@ -98,12 +82,11 @@ class CalendarState extends State<CalendarScreen>
                             '/recipes/clendar/$date1/$date2/$recipeParam');
                       },
                     ),
-                    Text(recipesSeleted.toString())
+                    const SizedBox(height: 10),
                   ],
                 ),
                 const SizedBox(height: 40),
                 DropdownSearch(
-                    //recipes.map((e) => e['name']).toList()
                     items: recipes.map((e) => e['name']).toList(),
                     onChanged: ((value) {
                       setState(() {
@@ -134,8 +117,6 @@ class CalendarState extends State<CalendarScreen>
                                     icon: const Icon(Icons.delete))
                               ]);
                         }),
-                    TextButton(
-                        onPressed: signOut, child: const Text('Cerrar Sesión')),
                   ],
                 ),
               ],

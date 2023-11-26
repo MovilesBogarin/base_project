@@ -25,4 +25,8 @@ class LoginProvider {
       return e.message;
     }
   }
+
+  static Future<void> signOut() async {
+    await Auth().signOut();
+  }
 }
