@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
+import '../../config/env/environment.dart';
 import '../../domain/dtos/recipe_dto.dart';
 import '../mappers/recipes_mapper.dart';
 
 class RecipeDataSource {
-  final String _baseUrl = 'http://localhost:3000';
+  final String _baseUrl = Environment.apiURL;
   final Dio _dio = Dio();
 
   Future<List<Recipe>> getRecipes() async {
@@ -12,7 +13,7 @@ class RecipeDataSource {
   }
 
   Future<Recipe> getRecipe(int? id) async {
-    final recipe = await _dio.get('$_baseUrl/recipe/$id');
+    final recipe = await _dio.get('$_baseUrl/recipes/$id');
     return RecipesMapper.mapRecipe(recipe.data);
   }
 
