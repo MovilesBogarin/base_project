@@ -4,11 +4,12 @@ This file is used to explain in detail changes made to the food structured app.
 <!-- TOC -->
   [[TOC]]
 
-## V 1.X.X
-Date: Nov XX, 2023
+## V 1.1.0
+Date: Nov 26, 2023
 * [NEW]
-  * Blank calendar screen and drawer menu
+  * Calendar screen
   * Recipes screen and edit recipe screen
+  * Sidebar drawer
 * [UPDATE]
   * Logout bugfix
 
