@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:base_project/presentation/widgets/inputs/input_text_box.dart';
-import '../../presentation/login/login_presenter.dart';
+import '../../presentation/providers/login_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -85,9 +85,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   onPressed: () async {
                     if (isLogin) {
-                      errorMessage = await LoginPresenter.signInWithEmailAndPassword(emailController.text, passwordController.text);
+                      errorMessage = await LoginProvider.signInWithEmailAndPassword(emailController.text, passwordController.text);
                     } else {
-                      errorMessage = await LoginPresenter.createUserWithEmailAndPassword(emailController.text, passwordController.text);
+                      errorMessage = await LoginProvider.createUserWithEmailAndPassword(emailController.text, passwordController.text);
                     }
                     setState(() {
                       errorMessage = errorMessage;
