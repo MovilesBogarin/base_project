@@ -4,6 +4,11 @@ This file is used to explain in detail changes made to the food structured app.
 <!-- TOC -->
   [[TOC]]
 
+## V 1.1.1
+Date: Nov 26, 2023
+* [FIX]
+  * Add .env file to gitignore
+
 ## V 1.1.0
 Date: Nov 26, 2023
 * [NEW]
