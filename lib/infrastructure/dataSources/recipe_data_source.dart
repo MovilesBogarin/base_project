@@ -1,7 +1,7 @@
+import 'package:base_project/infrastructure/casters/recipe/recipe_caster.dart';
 import 'package:dio/dio.dart';
 import '../../config/env/environment.dart';
-import '../../domain/dtos/recipe_dto.dart';
-import '../mappers/recipes_mapper.dart';
+import '../../domain/dtos/recipe/recipe_dto.dart';
 
 class RecipeDataSource {
   final String _baseUrl = Environment.apiURL;
@@ -9,19 +9,16 @@ class RecipeDataSource {
 
   Future<List<Recipe>> getRecipes() async {
     final recipes = await _dio.get('$_baseUrl/recipes');
-    return RecipesMapper.mapRecipes(recipes.data);
+    final recipesListCasted = RecipeCaster.toRecipesList(recipes.data);
+    return recipesListCasted;
   }
 
-  Future<Recipe> getRecipe(int? id) async {
-    final recipe = await _dio.get('$_baseUrl/recipes/$id');
-    return RecipesMapper.mapRecipe(recipe.data);
+  Future<int> createRecipe() async {
+    final result = await _dio.post('$_baseUrl/recipes/create');
+    return result.data as int;
   }
 
   // TODO: Reparar esto
-  // Future<Response> createRecipe(Map<String, dynamic> data) async {
-  //   return await _dio.post('$_baseUrl/recipes', data: data);
-  // }
-
   // Future<Response> updateRecipe(int? id, Map<String, dynamic> data) async {
   //   return await _dio.put('$_baseUrl/recipes/$id', data: data);
   // }
