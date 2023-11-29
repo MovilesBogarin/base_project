@@ -1,4 +1,9 @@
+// ignore_for_file: null_check_always_fails
+
 import 'package:base_project/config/helpers/dateFormater.dart';
+import 'package:base_project/domain/dtos/recipe/recipe_dto.dart';
+import 'package:base_project/presentation/providers/recipe/recipes_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:base_project/presentation/calendar/calendar_presenter.dart';
 import 'package:base_project/presentation/widgets/inputs/Custom_Button.dart';
 import 'package:base_project/static/static.dart';
@@ -11,14 +16,36 @@ import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../presentation/widgets/drawers/custom_drawer.dart';
 import '../../../config/menu/menu_items.dart';
 
-class CalendarScreen extends StatefulWidget {
+class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
   @override
-  State<CalendarScreen> createState() => CalendarState();
+  CalendarState createState() => CalendarState();
 }
 
-class CalendarState extends State<CalendarScreen>
+// ignore: must_be_immutable, subtype_of_sealed_class
+class CalendarState extends ConsumerState<CalendarScreen>
     with CustomAppBar, CustomDrawer {
+  List<Recipe> recipesList = [];
+  List<Recipe> filterRecipes = [];
+
+  List<Recipe> resultFilterRecipes(String query) {
+    List<Recipe> items = [];
+
+    if (query.isNotEmpty) {
+      items = recipesList
+          .where((element) =>
+              element.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
+    return items;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    recipesList =
+        ref.read(recipesProvider.notifier).getRecipes() as List<Recipe>;
+  }
 
   DateTime today = DateTime.now();
   DateTime? _selecteDay;
@@ -44,7 +71,6 @@ class CalendarState extends State<CalendarScreen>
     });
   }
 
-  List<Map<String, dynamic>> recipesList = recipes;
   List recipesSeleted = [];
 
   String currentRecipe = 'Escoge una de tus recetas :)';
@@ -87,13 +113,61 @@ class CalendarState extends State<CalendarScreen>
                 ),
                 const SizedBox(height: 40),
                 DropdownSearch(
-                    items: recipes.map((e) => e['name']).toList(),
-                    onChanged: ((value) {
-                      setState(() {
-                        recipeController = value.toString();
-                        recipesSeleted.add(value);
-                      });
-                    })),
+                  mode: Mode.MENU,
+                  showSearchBox: true,
+                  isFilteredOnline: true,
+                  dropDownButton:
+                      Icon(Icons.arrow_drop_down, color: Colors.black),
+                  dropdownSearchDecoration:
+                      const InputDecoration(hintText: 'search recipes'),
+                  showClearButton: false,
+                  onFind: (value) async {
+                    setState(() {});
+                    return resultFilterRecipes(value.toString() ?? '');
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      filterRecipes = [value ?? null!];
+                    });
+                  },
+                  dropdownBuilder: _customDropDownPrograms,
+                  popupItemBuilder: _customPopupItemBuilder,
+                  clearButtonBuilder: (_) => Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(Icons.clear, color: Colors.black),
+                  ),
+                ),
+                Expanded(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: filterRecipes.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                              height: 50,
+                              width: 100,
+                              child: Row(children: [
+                                if (filterRecipes[index].toString().isNotEmpty)
+                                  Text(
+                                    filterRecipes[index].name,
+                                    style: TextStyle(),
+                                  ),
+                                const SizedBox(child: Text('hoo')),
+                                Expanded(
+                                    child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(filterRecipes[index].name),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(filterRecipes[index].description),
+                                  ],
+                                ))
+                              ]));
+                        })),
                 Column(
                   children: <Widget>[
                     ListView.builder(
@@ -123,5 +197,38 @@ class CalendarState extends State<CalendarScreen>
             ),
           ),
         ));
+  }
+
+  Widget _customPopupItemBuilder(
+      Builder context, Recipe item, bool isSelected) {
+    return Container(
+          margin: EdgeInsets.symmetric(horizontal: 8),
+          decoration: isSelected
+              ? null
+              : BoxDecoration(
+                  border: Border.all(
+                      color: Theme.of(context as BuildContext).highlightColor),
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.white,
+                ),
+          child: ListTile(
+            title: Text(item.name),
+          ),
+        ) ??
+        Container();
+  }
+
+  Widget _customDropDownPrograms(BuildContext context, Recipe? item) {
+    return Container(
+        // ignore: unnecessary_null_comparison
+        child: (item! == null)
+            ? ListTile(
+                contentPadding: EdgeInsets.all(0),
+                title: Text('saarch recipe'),
+              )
+            : ListTile(
+                contentPadding: EdgeInsets.all(0),
+                title: Text(item.name),
+              ));
   }
 }
