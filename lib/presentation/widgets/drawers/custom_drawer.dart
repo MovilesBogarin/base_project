@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../providers/login_provider.dart';
+import '../../providers/login/login_provider.dart';
 import '../../../config/menu/menu_items.dart';
 
 mixin CustomDrawer {

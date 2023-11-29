@@ -18,7 +18,7 @@ Future<List<RecipeModel>> getRecipesApi() async {
 
   for (var item in jsonData['recipes']) {
     recipesApi.add(RecipeModel(
-        id: item['_id'], name: item['name'], description: item['description']));
+        id: item['_id'], name: item['name'], description: item['description'], ingredients: [], steps: []));
   }
 
   return recipesApi;

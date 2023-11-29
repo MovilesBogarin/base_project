@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../config/auth/auth.dart';
+import '../../../config/auth/auth.dart';
 
 class LoginProvider {
   static Future<String?> signInWithEmailAndPassword(email, password) async {
