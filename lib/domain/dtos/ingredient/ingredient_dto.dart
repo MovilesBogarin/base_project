@@ -1,8 +1,8 @@
 class Ingredient {
-  final int id;
-  final String name;
-  final num quantity;
-  final String unit;
+  int id;
+  String name;
+  num quantity;
+  String unit;
 
   Ingredient({
     required this.id,

@@ -1,11 +1,11 @@
 import '../../dtos/ingredient/ingredient_dto.dart';
 
 class Recipe {
-  final int id;
-  final String name;
-  final String description;
-  final List<Ingredient> ingredients;
-  final List<String> steps;
+  int id;
+  String name;
+  String description;
+  List<Ingredient> ingredients;
+  List<String> steps;
 
   Recipe({
     required this.id,

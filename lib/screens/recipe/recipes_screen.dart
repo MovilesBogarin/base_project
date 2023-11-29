@@ -44,7 +44,9 @@ class RecipesScreenState extends ConsumerState<RecipesScreen> with CustomAppBar,
                           title: Text(recipe.name),
                           subtitle: Text(recipe.description),
                           onTap: () async {
-                            context.push('/recipes/${recipe.id}');
+                            await context.push('/recipes/${recipe.id}');
+                            // TODO: Refactorize
+                            setState(() {});
                           },
                         );
                       },
@@ -52,7 +54,10 @@ class RecipesScreenState extends ConsumerState<RecipesScreen> with CustomAppBar,
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      context.push('/recipes/0');
+                      int newId = ref.read(recipesProvider.notifier).createRecipe();
+                      await context.push('/recipes/$newId');
+                      // TODO: Refactorize
+                      setState(() {});
                     },
                     child: const Icon(Icons.add),
                   ),

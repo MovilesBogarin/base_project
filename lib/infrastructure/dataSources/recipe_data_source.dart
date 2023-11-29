@@ -1,6 +1,6 @@
 import 'package:base_project/infrastructure/casters/recipe/recipe_caster.dart';
 import 'package:dio/dio.dart';
-import '../../config/env/environment.dart';
+import '../../config/const/env/environment.dart';
 import '../../domain/dtos/recipe/recipe_dto.dart';
 
 class RecipeDataSource {
