@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../domain/dtos/recipe/recipe_dto.dart';
 import '../../../infrastructure/dataSources/recipe_data_source.dart';
@@ -37,15 +38,23 @@ class Recipes extends _$Recipes {
   }
 
   int createRecipe() {
-    int newId = state.asData!.value.length + 1;
     Recipe newRecipe = RecipeCaster.toRecipe({
-      'id': newId,
+      'id': UniqueKey().hashCode,
       'name': 'Nueva receta',
       'description': 'Nueva descripción',
       'ingredients': [],
       'steps': [],
     });
+    RecipeDataSource().createRecipe(newRecipe);
     state.asData!.value.add(newRecipe);
     return newRecipe.id;
+  }
+
+  void updateRecipe(Recipe recipe) {
+    RecipeDataSource().updateRecipe(recipe);
+  }
+
+  void deleteRecipe(int id) {
+    RecipeDataSource().deleteRecipe(id);
   }
 }

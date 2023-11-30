@@ -47,6 +47,7 @@ class EditRecipesScreenState extends ConsumerState<EditRecipeScreen> with Custom
     currentRecipe.description = description;
     currentRecipe.ingredients = ingredients;
     currentRecipe.steps = steps;
+    ref.read(recipesProvider.notifier).updateRecipe(currentRecipe);
   }
 
   @override

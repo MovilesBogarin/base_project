@@ -14,4 +14,13 @@ class IngredientCaster {
       unit: map['unit'],
     );
   }
+
+  static Map<String, dynamic> toMap(Ingredient ingredient) {
+    return {
+      'id': ingredient.id,
+      'name': ingredient.name,
+      'quantity': ingredient.quantity,
+      'unit': ingredient.unit,
+    };
+  }
 }
