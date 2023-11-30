@@ -33,8 +33,17 @@ class Recipes extends _$Recipes {
       'quantity': 0,
       'unit': '',
     });
-    recipe.ingredients.add(newIngredient);
+    state.asData!.value.firstWhere((element) => element.id == recipe.id).ingredients.add(newIngredient);
+    state = AsyncValue.data([...state.asData!.value]);
     return newIngredient;
+  }
+
+  void updateIngredient(int recipeId, Ingredient ingredient, String name, num quantity, String unit) {
+    Ingredient ingredientToUpdate = state.asData!.value.firstWhere((element) => element.id == recipeId).ingredients.firstWhere((element) => element.id == ingredient.id);
+    ingredientToUpdate.name = name;
+    ingredientToUpdate.quantity = quantity;
+    ingredientToUpdate.unit = unit;
+    state = AsyncValue.data([...state.asData!.value]);
   }
 
   int createRecipe() {
@@ -46,15 +55,22 @@ class Recipes extends _$Recipes {
       'steps': [],
     });
     RecipeDataSource().createRecipe(newRecipe);
-    state.asData!.value.add(newRecipe);
+    state = AsyncValue.data([...state.asData!.value, newRecipe]);
     return newRecipe.id;
   }
 
-  void updateRecipe(Recipe recipe) {
-    RecipeDataSource().updateRecipe(recipe);
+  Future<void> updateRecipe(Recipe recipe) async {
+    await RecipeDataSource().updateRecipe(recipe);
+    Recipe recipeToUpdate = state.asData!.value.firstWhere((element) => element.id == recipe.id);
+    recipeToUpdate.name = recipe.name;
+    recipeToUpdate.description = recipe.description;
+    recipeToUpdate.ingredients = recipe.ingredients;
+    recipeToUpdate.steps = recipe.steps;
+    state = AsyncValue.data([...state.asData!.value]);
   }
 
   void deleteRecipe(int id) {
     RecipeDataSource().deleteRecipe(id);
+    state = AsyncValue.data([...state.asData!.value.where((element) => element.id != id)]);
   }
 }

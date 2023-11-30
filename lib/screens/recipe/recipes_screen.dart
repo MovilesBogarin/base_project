@@ -46,18 +46,14 @@ class RecipesScreenState extends ConsumerState<RecipesScreen> with CustomAppBar,
                           subtitle: Text(recipe.description),
                           trailing: _isEditing ? IconButton(
                             icon: const Icon(Icons.delete, size: 16),
-                            onPressed: () async {
+                            onPressed: () {
                               showAlertDialog(context, () {
                                 ref.read(recipesProvider.notifier).deleteRecipe(recipe.id);
-                                recipesList.removeAt(index);
-                                setState(() {});
                               });
                             }
                           ) : null,
-                          onTap: () async {
-                            await context.push('/recipes/${recipe.id}');
-                            // TODO: Refactorize
-                            setState(() {});
+                          onTap: () {
+                            context.push('/recipes/${recipe.id}');
                           },
                         );
                       },
@@ -65,11 +61,9 @@ class RecipesScreenState extends ConsumerState<RecipesScreen> with CustomAppBar,
                   ),
                   if (recipesList.isEmpty) const Expanded(child:Center(child: Text('No hay recetas'))),
                   ElevatedButton(
-                    onPressed: () async {
+                    onPressed: () {
                       int newId = ref.read(recipesProvider.notifier).createRecipe();
-                      await context.push('/recipes/$newId');
-                      // TODO: Refactorize
-                      setState(() {});
+                      context.push('/recipes/$newId');
                     },
                     child: const Icon(Icons.add),
                   ),
