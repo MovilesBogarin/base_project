@@ -6,6 +6,7 @@ class Recipe {
   String description;
   List<Ingredient> ingredients;
   List<String> steps;
+  List<String> dates;
 
   Recipe({
     required this.id,
@@ -13,5 +14,6 @@ class Recipe {
     required this.description,
     required this.ingredients,
     required this.steps,
+    required this.dates,
   });
 }

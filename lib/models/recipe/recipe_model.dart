@@ -7,20 +7,23 @@ class RecipeModel {
   final String description;
   final List<Ingredient> ingredients;
   final List<String> steps;
+  final List<String> dates;
 
   RecipeModel({
-    required this.id, 
-    required this.name, 
+    required this.id,
+    required this.name,
     required this.description,
     required this.ingredients,
     required this.steps,
+    required this.dates,
   });
 
   factory RecipeModel.fromJson(Map<String, dynamic> json) => RecipeModel(
-    id: json['id'], 
-    name: json['name'], 
-    description: json['description'],
-    ingredients: IngredientCaster.toIngredientsList(json['ingredients']),
-    steps: json['steps'], 
-  );
+        id: json['id'],
+        name: json['name'],
+        description: json['description'],
+        ingredients: IngredientCaster.toIngredientsList(json['ingredients']),
+        steps: json['steps'],
+        dates: json['dates'],
+      );
 }
