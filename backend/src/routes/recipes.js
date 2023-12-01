@@ -18,7 +18,7 @@ router.get("/api/recipes/create", (req, res) => {
       { name: "Jamon", quantity: 1, unit: "pza" },
     ],
     steps: [{ step: "sacar cositas" }, { step: "armar Chamwish" }],
-    dates: [],
+    dates: ["", ""],
   });
 
   res.json("1 Usuario creado");
