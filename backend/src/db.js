@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 function connect() {
   mongoose.connect(
     //""
-    "mongodb+srv://FoodStructure:1234@cluster0.llczuuy.mongodb.net/NombreDeTuBaseDeDatos",
+    "mongodb+srv://FoodStructure:1234@cluster0.llczuuy.mongodb.net/Food_Structure",
+
+    /*  mongodb+srv://FoodStructure:1234@cluster0.llczuuy.mongodb.net/?retryWrites=true&w=majority */
     {
       //useUnifiedTopology: true,
     }
