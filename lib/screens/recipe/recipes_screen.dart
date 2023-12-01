@@ -14,7 +14,8 @@ class RecipesScreen extends ConsumerStatefulWidget {
   RecipesScreenState createState() => RecipesScreenState();
 }
 
-class RecipesScreenState extends ConsumerState<RecipesScreen> with CustomAppBar, CustomDrawer, Loading {
+class RecipesScreenState extends ConsumerState<RecipesScreen>
+    with CustomAppBar, CustomDrawer, Loading {
   @override
   void initState() {
     super.initState();
@@ -22,51 +23,50 @@ class RecipesScreenState extends ConsumerState<RecipesScreen> with CustomAppBar,
   }
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWithMenuButton(title: 'Recetas'),
       drawer: drawerSimple(context),
-      body: Consumer(
-        builder: (context, ref, _){
-          final provider = ref.watch(recipesProvider);
-          return provider.when(
-            loading: () => loading,
-            error: (error, stack) => const Center(child: Text('Error')),
-            data: (recipesList) => SafeArea(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: recipesList.length,
-                      itemBuilder: (context, index) {
-                        final Recipe recipe = recipesList[index];
-                        return ListTile(
-                          title: Text(recipe.name),
-                          subtitle: Text(recipe.description),
-                          onTap: () async {
-                            await context.push('/recipes/${recipe.id}');
-                            // TODO: Refactorize
-                            setState(() {});
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      int newId = ref.read(recipesProvider.notifier).createRecipe();
-                      await context.push('/recipes/$newId');
-                      // TODO: Refactorize
-                      setState(() {});
+      body: Consumer(builder: (context, ref, _) {
+        final provider = ref.watch(recipesProvider);
+        return provider.when(
+          loading: () => loading,
+          error: (error, stack) => const Center(child: Text('Error')),
+          data: (recipesList) => SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: recipesList.length,
+                    itemBuilder: (context, index) {
+                      final Recipe recipe = recipesList[index];
+                      return ListTile(
+                        title: Text(recipe.name),
+                        subtitle: Text(recipe.description),
+                        onTap: () async {
+                          await context.push('/recipes/${recipe.id}');
+                          // TODO: Refactorize
+                          setState(() {});
+                        },
+                      );
                     },
-                    child: const Icon(Icons.add),
                   ),
-                ],
-              ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    String newId =
+                        ref.read(recipesProvider.notifier).createRecipe();
+                    await context.push('/recipes/$newId');
+                    // TODO: Refactorize
+                    setState(() {});
+                  },
+                  child: const Icon(Icons.add),
+                ),
+              ],
             ),
-          );
-        }
-      ),
+          ),
+        );
+      }),
     );
   }
 }

@@ -1,7 +1,7 @@
 import '../../dtos/ingredient/ingredient_dto.dart';
 
 class Recipe {
-  int id;
+  String id;
   String name;
   String description;
   List<Ingredient> ingredients;

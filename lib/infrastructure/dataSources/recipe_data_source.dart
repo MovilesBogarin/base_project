@@ -8,7 +8,7 @@ class RecipeDataSource {
   final Dio _dio = Dio();
 
   Future<List<Recipe>> getRecipes() async {
-    final recipes = await _dio.get('$_baseUrl/recipes');
+    final recipes = await _dio.get('$_baseUrl/api/recipes');
     final recipesListCasted = RecipeCaster.toRecipesList(recipes.data);
     return recipesListCasted;
   }

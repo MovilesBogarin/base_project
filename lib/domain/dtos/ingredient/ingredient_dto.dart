@@ -1,5 +1,5 @@
 class Ingredient {
-  int id;
+  String id;
   String name;
   num quantity;
   String unit;

@@ -43,7 +43,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/recipes/:id',
       builder: (BuildContext context, GoRouterState state) {
-        return EditRecipeScreen(id: int.parse(state.pathParameters['id']!));
+        return EditRecipeScreen(id: state.pathParameters['id']!);
       },
     ),
   ],

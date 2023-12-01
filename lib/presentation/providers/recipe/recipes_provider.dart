@@ -19,15 +19,13 @@ class Recipes extends _$Recipes {
     return await RecipeDataSource().getRecipes();
   }
 
-  Recipe getRecipe(int id) {
+  Recipe getRecipe(String id) {
     final currentState = state.asData?.value ?? [];
     return currentState.firstWhere((element) => element.id == id);
   }
 
   Ingredient createIngredient(Recipe recipe) {
-    int newId = recipe.ingredients.length + 1;
     Ingredient newIngredient = IngredientCaster.toIngredient({
-      'id': newId,
       'name': '',
       'quantity': 0,
       'unit': '',
@@ -36,10 +34,8 @@ class Recipes extends _$Recipes {
     return newIngredient;
   }
 
-  int createRecipe() {
-    int newId = state.asData!.value.length + 1;
+  String createRecipe() {
     Recipe newRecipe = RecipeCaster.toRecipe({
-      'id': newId,
       'name': 'Nueva receta',
       'description': 'Nueva descripción',
       'ingredients': [],
