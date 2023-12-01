@@ -140,6 +140,12 @@ class CalendarState extends ConsumerState<CalendarScreen>
                       ],
                     ),
 
+                    if (RangeFinish == null)
+                      Custom_Button(
+                        txt: 'Guardar recetas',
+                        onPressed: () {},
+                      ),
+
                     /*** */
                   ],
                 ),
