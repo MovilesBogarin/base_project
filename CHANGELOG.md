@@ -4,6 +4,12 @@ This file is used to explain in detail changes made to the food structured app.
 <!-- TOC -->
   [[TOC]]
 
+## V 1.2.0
+Date: Dec 01, 2023
+* [UPDATE]
+  * Fully connected to api on recipes and edit recipes screen
+  * Riverpod implementation
+
 ## V 1.1.1
 Date: Nov 26, 2023
 * [FIX]
