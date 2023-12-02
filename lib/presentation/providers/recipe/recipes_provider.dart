@@ -25,21 +25,20 @@ class Recipes extends _$Recipes {
     return currentState.firstWhere((element) => element.id == id);
   }
 
-  Ingredient createIngredient(Recipe recipe) {
-    int newId = recipe.ingredients.length + 1;
+  Ingredient createIngredient(int recipeId) {
     Ingredient newIngredient = IngredientCaster.toIngredient({
-      'id': newId,
+      'id': UniqueKey().hashCode,
       'name': '',
       'quantity': 0,
       'unit': '',
     });
-    state.asData!.value.firstWhere((element) => element.id == recipe.id).ingredients.add(newIngredient);
+    state.asData!.value.firstWhere((element) => element.id == recipeId).ingredients.add(newIngredient);
     state = AsyncValue.data([...state.asData!.value]);
     return newIngredient;
   }
 
-  void updateIngredient(int recipeId, Ingredient ingredient, String name, num quantity, String unit) {
-    Ingredient ingredientToUpdate = state.asData!.value.firstWhere((element) => element.id == recipeId).ingredients.firstWhere((element) => element.id == ingredient.id);
+  void updateIngredient(int recipeId, int ingredientId, String name, num quantity, String unit) {
+    Ingredient ingredientToUpdate = state.asData!.value.firstWhere((element) => element.id == recipeId).ingredients.firstWhere((element) => element.id == ingredientId);
     ingredientToUpdate.name = name;
     ingredientToUpdate.quantity = quantity;
     ingredientToUpdate.unit = unit;
