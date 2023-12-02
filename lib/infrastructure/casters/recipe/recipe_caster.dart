@@ -21,4 +21,16 @@ class RecipeCaster {
       steps: stepsList,
     );
   }
+
+  static Map<String, dynamic> toMap(Recipe recipe) {
+    final List<Map<String, dynamic>> ingredientsList = recipe.ingredients.map((ingredient) => IngredientCaster.toMap(ingredient)).toList();
+    final List<String> stepsList = recipe.steps.map((step) => step).toList();
+    return {
+      'id': recipe.id,
+      'name': recipe.name,
+      'description': recipe.description,
+      'ingredients': ingredientsList,
+      'steps': stepsList,
+    };
+  }
 }

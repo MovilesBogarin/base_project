@@ -34,19 +34,19 @@ class EditRecipesScreenState extends ConsumerState<EditRecipeScreen> with Custom
   final TextEditingController _recipeDescriptionController = TextEditingController();
   bool recipeHasIngredientChanges = false;
 
-  void saveIngredient(Ingredient ingredient, String name, num quantity, String unit) {
-    ingredient.name = name;
-    ingredient.quantity = quantity;
-    ingredient.unit = unit;
-    // TODO: Refactorize
+  void updateIngredient(Ingredient ingredient, String name, num quantity, String unit) {
+    ref.read(recipesProvider.notifier).updateIngredient(currentRecipe.id, ingredient.id, name, quantity, unit);
     setState(() {});
   }
+
+  Ingredient createIngredient() => ref.read(recipesProvider.notifier).createIngredient(currentRecipe.id);
 
   void saveRecipe(String name, String description, List<Ingredient> ingredients, List<String> steps) {
     currentRecipe.name = name;
     currentRecipe.description = description;
     currentRecipe.ingredients = ingredients;
     currentRecipe.steps = steps;
+    ref.read(recipesProvider.notifier).updateRecipe(currentRecipe);
   }
 
   @override
@@ -73,7 +73,7 @@ class EditRecipesScreenState extends ConsumerState<EditRecipeScreen> with Custom
           });
         } : null,
         onTap: isEditing ? () {
-          openDialog(context: context, saveIngredient: saveIngredient, ingredient: ingredient);
+          openDialog(context: context, updateIngredient: updateIngredient, ingredient: ingredient);
         } : null,
       )).toList(); 
 
@@ -117,8 +117,7 @@ class EditRecipesScreenState extends ConsumerState<EditRecipeScreen> with Custom
               if (!isEditing && ingredientsChipsList.isEmpty) const Text('No hay ingredientes'),
               if (isEditing) IconButton(
                 onPressed: () {
-                  Ingredient ingredient = ref.read(recipesProvider.notifier).createIngredient(currentRecipe);
-                  openDialog(context: context, saveIngredient: saveIngredient, ingredient: ingredient);
+                  openDialog(context: context, updateIngredient: updateIngredient, createIngredient: createIngredient);
                 }, 
                 icon: Container(
                   decoration: BoxDecoration(
@@ -259,10 +258,10 @@ class StepRow extends StatelessWidget {
   }
 }
 
-void openDialog({required BuildContext context, required Function(Ingredient ingredient, String name, num quantity, String unit) saveIngredient, Ingredient? ingredient}) {
-  final TextEditingController ingredientNameController = TextEditingController(text: ingredient!.name);
-  final TextEditingController ingredientQuantityController = TextEditingController(text: ingredient.quantity.toString());
-  final TextEditingController ingredientUnitController = TextEditingController(text: ingredient.unit);
+void openDialog({required BuildContext context, required void Function(Ingredient ingredient, String name, num quantity, String unit) updateIngredient, Ingredient? ingredient, Ingredient Function()? createIngredient}) {
+  final TextEditingController ingredientNameController = TextEditingController(text: ingredient?.name ?? '');
+  final TextEditingController ingredientQuantityController = TextEditingController(text: ingredient?.quantity != null ? ingredient!.quantity.toString() : '0');
+  final TextEditingController ingredientUnitController = TextEditingController(text: ingredient?.unit ?? '');
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -296,8 +295,7 @@ void openDialog({required BuildContext context, required Function(Ingredient ing
               Expanded(
                 flex: 2,
                 child: UnitsDropdown(
-                  // TODO: Refactorize
-                  initialValue: ingredient.unit.isEmpty ? null : ingredient.unit,
+                  initialValue: ingredient?.unit != null ? ingredient!.unit : null,
                   onChanged: (String? value) {
                     ingredientUnitController.text = value!;
                   },
@@ -318,7 +316,13 @@ void openDialog({required BuildContext context, required Function(Ingredient ing
               if (ingredientNameController.text.isEmpty || ingredientQuantityController.text.isEmpty || ingredientUnitController.text.isEmpty) {
                 return;
               }
-              saveIngredient(ingredient, ingredientNameController.text, num.parse(ingredientQuantityController.text), ingredientUnitController.text);
+              Ingredient newIngredient;
+              if (ingredient == null) {
+                newIngredient = createIngredient!();
+              } else {
+                newIngredient = ingredient;
+              }
+              updateIngredient(newIngredient, ingredientNameController.text, num.parse(ingredientQuantityController.text), ingredientUnitController.text);
               context.pop();
             },
             child: const Text('Guardar cambios'))

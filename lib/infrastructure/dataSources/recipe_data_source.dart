@@ -13,17 +13,15 @@ class RecipeDataSource {
     return recipesListCasted;
   }
 
-  Future<int> createRecipe() async {
-    final result = await _dio.post('$_baseUrl/recipes/create');
-    return result.data as int;
+  Future<void> createRecipe(Recipe recipe) async {
+    await _dio.post('$_baseUrl/recipes/create', data: RecipeCaster.toMap(recipe));
   }
 
-  // TODO: Reparar esto
-  // Future<Response> updateRecipe(int? id, Map<String, dynamic> data) async {
-  //   return await _dio.put('$_baseUrl/recipes/$id', data: data);
-  // }
+  Future<void> updateRecipe(Recipe recipe) async {
+    await _dio.put('$_baseUrl/recipes/${recipe.id}', data: RecipeCaster.toMap(recipe));
+  }
 
-  // Future<Response> deleteRecipe(int? id) async {
-  //   return await _dio.delete('$_baseUrl/recipes/$id');
-  // }
+  Future<void> deleteRecipe(int id) async {
+    await _dio.delete('$_baseUrl/recipes/$id');
+  }
 }
