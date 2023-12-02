@@ -1,87 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../presentation/providers/recipe/recipes_provider.dart';
+import '../../domain/dtos/recipe/recipe_dto.dart';
+import '../../domain/dtos/ingredient/ingredient_dto.dart';
 import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../presentation/widgets/chip/ingredient_chip.dart';
 import '../../presentation/widgets/containers/custom_container.dart';
 
-import '../../static/static.dart';
+import '../../config/const/enums/units_enum.dart';
 
-class EditRecipeScreen extends StatefulWidget {
+class EditRecipeScreen extends ConsumerStatefulWidget {
   final int id;
 
   const EditRecipeScreen({Key? key, required this.id}) : super(key: key);
 
   @override
-  State<EditRecipeScreen> createState() => _EditRecipeScreenState();
+  EditRecipesScreenState createState() => EditRecipesScreenState();
 }
 
-class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
+class EditRecipesScreenState extends ConsumerState<EditRecipeScreen> with CustomAppBar {
   bool isEditing = false;
-  final TextEditingController _recipeNameController = TextEditingController();
-  final TextEditingController _recipeDescriptionController = TextEditingController();
-  late Map<String, dynamic> currentRecipe;
-  bool recipeHasIngredientChanges = false;
+  late Recipe currentRecipe;
 
-  void saveIngredient(String name, num quantity, String unit) {
-    final List<Map<String,dynamic>> ingredients = currentRecipe['ingredients'];
-    final List<Map<String,dynamic>> ingredientsFound = ingredients.where((element) => element['name'] == name).toList();
-    if (ingredientsFound.isNotEmpty) {
-      recipeHasIngredientChanges = true;
-      setState(() {
-        currentRecipe['ingredients'] = ingredients.map((Map<String,dynamic> ingrediente) {
-          if (ingrediente['name'] == name) {
-            ingrediente['name'] = name;
-            ingrediente['quantity'] = quantity;
-            ingrediente['unit'] = unit;
-          }
-          return ingrediente;
-        }).toList();
-      });
-    } else {
-      setState(() {
-        currentRecipe['ingredients'].add({'name': name, 'quantity': quantity, 'unit': unit});
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    currentRecipe = ref.read(recipesProvider.notifier).getRecipe(widget.id);
   }
 
-  void saveRecipe(String name, String description, List<Map<String,dynamic>> ingredients, List<String> steps) {
-    final Map<String, dynamic> recipeToUpdate = recipes.where((element) => element['id'] == widget.id).first;
-    setState(() {
-      recipeToUpdate['name'] = name;
-      recipeToUpdate['description'] = description;
-      recipeToUpdate['ingredients'] = ingredients;
-      recipeToUpdate['steps'] = steps;
-    });
-    recipeHasIngredientChanges = false;
+  final TextEditingController _recipeNameController = TextEditingController();
+  final TextEditingController _recipeDescriptionController = TextEditingController();
+  bool recipeHasIngredientChanges = false;
+
+  void updateIngredient(Ingredient ingredient, String name, num quantity, String unit) {
+    ref.read(recipesProvider.notifier).updateIngredient(currentRecipe.id, ingredient.id, name, quantity, unit);
+    setState(() {});
+  }
+
+  Ingredient createIngredient() => ref.read(recipesProvider.notifier).createIngredient(currentRecipe.id);
+
+  void saveRecipe(String name, String description, List<Ingredient> ingredients, List<String> steps) {
+    currentRecipe.name = name;
+    currentRecipe.description = description;
+    currentRecipe.ingredients = ingredients;
+    currentRecipe.steps = steps;
+    ref.read(recipesProvider.notifier).updateRecipe(currentRecipe);
   }
 
   @override
   Widget build(BuildContext context) {
-    currentRecipe = recipes.where((element) => element['id'] == widget.id).first;
-    final List<Map<String,dynamic>> ingredients = currentRecipe['ingredients'];
-    final List<String> steps = currentRecipe['steps'];
+    final List<Ingredient> ingredients = currentRecipe.ingredients;
+    final List<String> steps = currentRecipe.steps;
     final List<TextEditingController> stepsControllers = steps.map((String stepText) => TextEditingController(text: stepText)).toList();
 
     if (_recipeNameController.text.isEmpty) {
-      _recipeNameController.text = currentRecipe['name'];
+      _recipeNameController.text = currentRecipe.name;
     }
     if (_recipeDescriptionController.text.isEmpty) {
-      _recipeDescriptionController.text = currentRecipe['description'];
+      _recipeDescriptionController.text = currentRecipe.description;
     }
 
-    final ingredientsChipsList = ingredients.mapIndexed((int index, Map<String,dynamic> ingrediente) =>
+    final ingredientsChipsList = ingredients.mapIndexed((int index, Ingredient ingredient) =>
       IngredientChip(
-        name: ingrediente['name'],
-        quantity: ingrediente['quantity'],
-        unit: ingrediente['unit'],
+        name: ingredient.name,
+        quantity: ingredient.quantity,
+        unit: ingredient.unit,
         onDelete: isEditing ? () {
           setState(() {
             ingredients.removeAt(index);
           });
         } : null,
         onTap: isEditing ? () {
-          openDialog(context: context, saveIngredient: saveIngredient, name: ingrediente['name'], quantity: ingrediente['quantity'], unit: ingrediente['unit']);
+          openDialog(context: context, updateIngredient: updateIngredient, ingredient: ingredient);
         } : null,
       )).toList(); 
 
@@ -92,7 +84,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
           setState(() {
             if (isEditing) {
               final stepsUpdated = stepsControllers.map((TextEditingController controller) => controller.text).toList();
-              saveRecipe(_recipeNameController.text, _recipeDescriptionController.text, currentRecipe['ingredients'], stepsUpdated);
+              saveRecipe(_recipeNameController.text, _recipeDescriptionController.text, currentRecipe.ingredients, stepsUpdated);
             }
             isEditing = !isEditing;
           });
@@ -125,7 +117,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> with CustomAppBar {
               if (!isEditing && ingredientsChipsList.isEmpty) const Text('No hay ingredientes'),
               if (isEditing) IconButton(
                 onPressed: () {
-                  openDialog(context: context, saveIngredient: saveIngredient);
+                  openDialog(context: context, updateIngredient: updateIngredient, createIngredient: createIngredient);
                 }, 
                 icon: Container(
                   decoration: BoxDecoration(
@@ -266,10 +258,10 @@ class StepRow extends StatelessWidget {
   }
 }
 
-void openDialog({required BuildContext context, required Function(String name, num quantity, String unit) saveIngredient, String? name, num quantity = 0, String? unit}) {
-  final TextEditingController ingredientNameController = TextEditingController(text: name);
-  final TextEditingController ingredientQuantityController = TextEditingController(text: quantity.toString());
-  final TextEditingController ingredientUnitController = TextEditingController();
+void openDialog({required BuildContext context, required void Function(Ingredient ingredient, String name, num quantity, String unit) updateIngredient, Ingredient? ingredient, Ingredient Function()? createIngredient}) {
+  final TextEditingController ingredientNameController = TextEditingController(text: ingredient?.name ?? '');
+  final TextEditingController ingredientQuantityController = TextEditingController(text: ingredient?.quantity != null ? ingredient!.quantity.toString() : '0');
+  final TextEditingController ingredientUnitController = TextEditingController(text: ingredient?.unit ?? '');
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -303,7 +295,7 @@ void openDialog({required BuildContext context, required Function(String name, n
               Expanded(
                 flex: 2,
                 child: UnitsDropdown(
-                  initialValue: unit,
+                  initialValue: ingredient?.unit != null ? ingredient!.unit : null,
                   onChanged: (String? value) {
                     ingredientUnitController.text = value!;
                   },
@@ -324,7 +316,13 @@ void openDialog({required BuildContext context, required Function(String name, n
               if (ingredientNameController.text.isEmpty || ingredientQuantityController.text.isEmpty || ingredientUnitController.text.isEmpty) {
                 return;
               }
-              saveIngredient(ingredientNameController.text, num.parse(ingredientQuantityController.text), ingredientUnitController.text);
+              Ingredient newIngredient;
+              if (ingredient == null) {
+                newIngredient = createIngredient!();
+              } else {
+                newIngredient = ingredient;
+              }
+              updateIngredient(newIngredient, ingredientNameController.text, num.parse(ingredientQuantityController.text), ingredientUnitController.text);
               context.pop();
             },
             child: const Text('Guardar cambios'))

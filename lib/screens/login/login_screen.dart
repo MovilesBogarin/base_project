@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:base_project/presentation/widgets/inputs/input_text_box.dart';
-import '../../presentation/providers/login_provider.dart';
+import '../../presentation/providers/login/login_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

@@ -10,7 +10,6 @@ class IngredientChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     return InkWell(
       onTap: onTap,
       splashColor: Colors.transparent, 
@@ -18,7 +17,6 @@ class IngredientChip extends StatelessWidget {
       focusColor: Colors.transparent,
       child: Chip(
         padding: const EdgeInsets.all(2.0),
-        backgroundColor: colors.primaryContainer,
         label: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -30,7 +28,6 @@ class IngredientChip extends StatelessWidget {
         shape: const StadiumBorder(
           side: BorderSide(
             width: 0.5,
-            color: Colors.red,
           ),
         ),
         deleteIcon: Icon(Icons.close, size: 16, color: Colors.grey[600]),
