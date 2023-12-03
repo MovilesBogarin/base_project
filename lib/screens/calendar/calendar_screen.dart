@@ -1,7 +1,9 @@
 import 'package:base_project/config/helpers/dateFormater.dart';
 import 'package:base_project/domain/dtos/recipe/recipe_dto.dart';
+import 'package:base_project/domain/dtos/schedule_recipe/schedule_recipe_dto.dart';
 import 'package:base_project/presentation/calendar/calendar_presenter.dart';
 import 'package:base_project/presentation/providers/recipe/recipes_provider.dart';
+import 'package:base_project/presentation/providers/schedule_recipe/schedule_recipes_provider.dart';
 import 'package:base_project/presentation/widgets/inputs/Custom_Button.dart';
 import 'package:base_project/presentation/widgets/loading/loading.dart';
 
@@ -28,10 +30,13 @@ class CalendarState extends ConsumerState<CalendarScreen>
   DateTime? RangeStart;
   DateTime? RangeFinish;
 
+ 
+
   @override
   void initState() {
     super.initState();
     ref.read(recipesProvider.notifier).getRecipes();
+    ref.read(scheduleRecipesProvider.notifier).getScheduleRecipes();
   }
 
   String formatDate(DateTime? date) {
@@ -61,6 +66,7 @@ class CalendarState extends ConsumerState<CalendarScreen>
   String? recipeController;
   int quantity = 0;
   final ScrollController _scrollControler = ScrollController();
+
   late final MenuItem menuItem;
   @override
   Widget build(BuildContext context) {
@@ -69,111 +75,125 @@ class CalendarState extends ConsumerState<CalendarScreen>
         drawer: drawerSimple(context),
         body: Consumer(builder: (context, ref, _) {
           final provider = ref.watch(recipesProvider);
+          final providerS = ref.watch(scheduleRecipesProvider);
+          //final   Future List<ScheduleRecipe> providerSchedule = ref.watch(scheduleRecipesProvider.notifier).getScheduleRecipes();
+
+          // ignore: unused_local_variable
+          // List<ScheduleRecipe> scheduleList = providerSchedule.when(data: (recipesList) => recipesList, error: (error, stack) =>   List<ScheduleRecipe> l = [] ,loading: () => loading);
+          // final  List<ScheduleRecipe> scheduleList = finalproviderSchedule.whenData((value) => value);
+
           return provider.when(
-            loading: () => loading,
-            error: (error, stack) => const Center(child: Text('Error')),
-            data: (recipesList) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-              child: Container(
-                decoration: bodyCustom(),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  children: [
-                    const SizedBox(height: 20),
-                    tableCalendarCustom(
-                        RangeStart, RangeFinish, _onDaysSelected, today),
-                    const SizedBox(height: 10),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 10),
-                        Custom_Button(
-                          txt: 'Generar reporte',
-                          onPressed: () {
-                            var date1 = "${formatDate(RangeFinish)}";
-                            var date2 = "${formatDate(RangeStart)}";
-                            var recipeParam = recipesSeleted.toString();
-                            context.push(
-                                '/recipes/clendar/$date1/$date2/$recipeParam');
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                      ],
-                    ), //******* */
-                    const SizedBox(height: 40),
-                    //recipesList.map((e) => e.name).toList()
-                    if (RangeFinish == null)
-                      DropdownSearch(
-                          items: recipesList,
-                          itemAsString: (Recipe item) => item.name,
-                          onChanged: ((value) {
-                            setState(() {
-                              recipeController = value.toString();
-                              recipesSeleted.add(value!);
-                            });
-                          })),
+              loading: () => loading,
+              error: (error, stack) => const Center(child: Text('Error')),
+              data: (recipesList) {
+                return providerS.when(
+                  error: (error, stack) => const Center(child: Text('Error')),
+                  loading: () => loading,
+                  data: (scheduleList) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 30),
+                    child: Container(
+                      decoration: bodyCustom(),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        children: [
+                          const SizedBox(height: 20),
+                          tableCalendarCustom(
+                              RangeStart, RangeFinish, _onDaysSelected, today),
+                          const SizedBox(height: 10),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+                              Custom_Button(
+                                txt: 'Generar reporte',
+                                onPressed: () {
+                                  var date1 = "${formatDate(RangeFinish)}";
+                                  var date2 = "${formatDate(RangeStart)}";
+                                  var recipeParam = recipesSeleted.toString();
+                                  context.push(
+                                      '/recipes/clendar/$date1/$date2/$recipeParam');
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ), //******* */
+                          const SizedBox(height: 40),
+                          //recipesList.map((e) => e.name).toList()
+                          if (RangeFinish == null)
+                            DropdownSearch(
+                                items: recipesList,
+                                itemAsString: (Recipe item) => item.name,
+                                onChanged: ((value) {
+                                  setState(() {
+                                    recipeController = value.toString();
+                                    recipesSeleted.add(value!);
+                                  });
+                                })),
 
-                    Column(
-                      children: <Widget>[
-                        if (RangeFinish == null)
-                          ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: recipesSeleted.length,
-                              itemBuilder: (context, index) {
-                                return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${recipesSeleted[index].name} on ${formatDate(RangeStart)} ',
-                                        style: TextStyle(),
-                                      ),
-                                      
-                                      IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              quantity++;
-                                            });
-                                          },
-                                          icon: const Icon(Icons.add)),
-                                          IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              if(quantity > 0)
-                                              quantity--;
-                                            });
-                                          },
-                                          icon: const Icon(Icons.remove)),
-                                          Text(
-                                        '${quantity}',
-                                        style: TextStyle(),
-                                      ),
-                                      IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              recipesSeleted.remove(
-                                                  recipesSeleted[index]);
-                                            });
-                                          },
-                                          icon: const Icon(Icons.delete)),
-                                          
-                                    ]);
-                              }),
-                      ],
-                    ),
+                          Column(
+                            children: <Widget>[
+                              if (RangeFinish == null)
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: recipesSeleted.length,
+                                    itemBuilder: (context, index) {
+                                      return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              '${recipesSeleted[index].name} on ${formatDate(RangeStart)} ',
+                                              style: TextStyle(),
+                                            ),
+                                            IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    quantity++;
+                                                  });
+                                                },
+                                                icon: const Icon(Icons.add)),
+                                            IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    if (quantity > 0)
+                                                      quantity--;
+                                                  });
+                                                },
+                                                icon: const Icon(Icons.remove)),
+                                            Text(
+                                              '${quantity}',
+                                              style: TextStyle(),
+                                            ),
+                                            IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    recipesSeleted.remove(
+                                                        recipesSeleted[index]);
+                                                  });
+                                                },
+                                                icon: const Icon(Icons.delete)),
+                                          ]);
+                                    }),
+                            ],
+                          ),
+                          const SizedBox(height: 40),
 
-                    if (RangeFinish == null)
-                      Custom_Button(
-                        txt: 'Guardar recetas',
-                        onPressed: () {},
+                          Text('${scheduleList.map((e) => e.date).toList()}'),
+
+                          if (RangeFinish == null)
+                            Custom_Button(
+                              txt: 'Guardar recetas',
+                              onPressed: () {},
+                            ),
+
+                          /*** */
+                        ],
                       ),
-
-                    /*** */
-                  ],
-                ),
-              ),
-            ),
-          );
+                    ),
+                  ),
+                );
+              });
         }));
   }
 }

@@ -9,8 +9,8 @@ class ScheduleRecipeCaster {
 
   static ScheduleRecipe toSchedule(Map<String, dynamic> map) {
     return ScheduleRecipe(
-        id_recipe: map['id_schedule'],
-        id_schedule: map['id_recipe'],
+        id_schedule: map['id_schedule'],
+        id_recipe: map['id_recipe'],
         quantity: map['quantity'],
         date: map['date']);
   }

@@ -9,7 +9,7 @@ part  'schedule_recipes_provider.g.dart';
 
 
 @riverpod
-class ScheduleRecipes extends _$ScheduleRecipe {
+class ScheduleRecipes extends _$ScheduleRecipes {
   ScheduleRecipes() : super();
 
   @override
@@ -19,34 +19,32 @@ class ScheduleRecipes extends _$ScheduleRecipe {
     return await ScheduleRecipeDataSource().getScheduleRecipes();
   }
 
-/*
-  int createScheduleRecipe() {
+    int createRecipe() {
     ScheduleRecipe newSchedule = ScheduleRecipeCaster.toSchedule({
       'id_schedule': UniqueKey().hashCode,
       'id_recipe': 0,
       'quantity': 0,
-      'date': [],
+      'date': ''
       
     });
-*//*
     ScheduleRecipeDataSource().createScheduleRecipe(newSchedule);
     state = AsyncValue.data([...state.asData!.value, newSchedule]);
-    return newSchedule.id;
+    return newSchedule.id_schedule;
   }
 
-  Future<void> updateRecipe(Recipe recipe) async {
-    await RecipeDataSource().updateRecipe(recipe);
-    Recipe recipeToUpdate = state.asData!.value.firstWhere((element) => element.id == recipe.id);
-    recipeToUpdate.name = recipe.name;
-    recipeToUpdate.description = recipe.description;
-    recipeToUpdate.ingredients = recipe.ingredients;
-    recipeToUpdate.steps = recipe.steps;
+    Future<void> updateScheduleRecipe(ScheduleRecipe schedule) async {
+    await ScheduleRecipeDataSource().updateScheduleRecipe(schedule);
+    ScheduleRecipe scheduleToUpdate = state.asData!.value.firstWhere((element) => element.id_schedule == schedule.id_schedule);
+    scheduleToUpdate.id_schedule = schedule.id_schedule;
+    scheduleToUpdate.id_recipe = schedule.id_recipe;
+    scheduleToUpdate.quantity = schedule.quantity;
+    scheduleToUpdate.date = schedule.date;
     state = AsyncValue.data([...state.asData!.value]);
   }
-
-  void deleteRecipe(int id) {
-    RecipeDataSource().deleteRecipe(id);
-    state = AsyncValue.data([...state.asData!.value.where((element) => element.id != id)]);
+    void deleteScheduleRecipe(int id) {
+    ScheduleRecipeDataSource().deleteSchduleRecipe(id);
+    state = AsyncValue.data([...state.asData!.value.where((element) => element.id_schedule != id)]);
   }
-  */
+
+
 }
