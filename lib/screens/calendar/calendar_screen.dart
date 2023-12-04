@@ -158,29 +158,35 @@ class CalendarState extends ConsumerState<CalendarScreen>
 
                           Column(
                             children: <Widget>[
-                              if (RangeFinish == null)
-                                ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: scheduleList.length,
-                                    itemBuilder: (context, index) {
-                                      return Row(
+                              ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: scheduleIsInsSelected(scheduleList,
+                                          RangeStart ?? DateTime.now())
+                                      .length,
+                                  itemBuilder: (context, index) {
+                                    scheduleListSelected =
+                                        scheduleIsInsSelected(scheduleList,
+                                            RangeStart ?? DateTime.now());
+                                    return Container(
+                                      child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              '${schedueRecipeName(scheduleList[index].id_recipe, recipesList)}, en el: ${scheduleList[index].date} ',
+                                              '${schedueRecipeName(scheduleListSelected[index].id_recipe, recipesList)}, en el: ${scheduleListSelected[index].date} ',
                                               style: TextStyle(),
                                             ),
                                             IconButton(
                                                 onPressed: () {
                                                   setState(() {
+                                                    currentSchedule =
+                                                        scheduleListSelected[
+                                                            index];
                                                     currentSchedule.quantity =
-                                                        scheduleList[index]
-                                                                .quantity =
-                                                            scheduleList[index]
-                                                                    .quantity +
-                                                                1;
-
+                                                        scheduleListSelected[
+                                                                    index]
+                                                                .quantity +
+                                                            1;
                                                     updateScheduleRecipe();
                                                   });
                                                 },
@@ -188,47 +194,51 @@ class CalendarState extends ConsumerState<CalendarScreen>
                                             IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    if (scheduleList[index]
+                                                    if (scheduleListSelected[
+                                                                index]
                                                             .quantity >
                                                         1)
-                                                      currentSchedule.quantity =
-                                                          scheduleList[index]
-                                                                  .quantity =
-                                                              scheduleList[
-                                                                          index]
-                                                                      .quantity -
-                                                                  1;
+                                                      currentSchedule =
+                                                          scheduleListSelected[
+                                                              index];
+                                                    currentSchedule.quantity =
+                                                        scheduleListSelected[
+                                                                    index]
+                                                                .quantity -
+                                                            1;
 
                                                     updateScheduleRecipe();
                                                   });
                                                 },
                                                 icon: const Icon(Icons.remove)),
                                             Text(
-                                              '${scheduleList[index].quantity}',
+                                              '${scheduleListSelected[index].quantity}',
                                               style: TextStyle(),
                                             ),
                                             IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    id = scheduleList[index]
+                                                    id = scheduleListSelected[
+                                                            index]
                                                         .id_schedule;
                                                     deleteScheduleRecipe();
                                                   });
                                                 },
                                                 icon: const Icon(Icons.delete)),
-                                          ]);
-                                    }),
+                                          ]),
+                                    );
+                                  }),
                             ],
                           ),
                           const SizedBox(height: 40),
 
-                          if (RangeFinish == null)
+                          /*if (RangeFinish == null)
                             Custom_Button(
                               txt: 'Guardar recetas',
                               onPressed: () {},
                             ),
                           const SizedBox(height: 40),
-                          Text(scheduleList.toString())
+                          Text(scheduleList.toString())*/
                           /*** */
                         ],
                       ),
@@ -260,4 +270,20 @@ String? schedueRecipeName(int id_schedule, List<Recipe> recipes) {
   }
 
   return nombre;
+}
+
+List<ScheduleRecipe> scheduleIsInsSelected(
+    List<ScheduleRecipe> scheduleList, DateTime startDate) {
+  List<ScheduleRecipe> selectedSchedule = [];
+  print(startDate.toString());
+
+  String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDate);
+
+  for (ScheduleRecipe schedule in scheduleList) {
+    if (schedule.date == formattedStartDate) {
+      selectedSchedule.add(schedule);
+    }
+  }
+
+  return selectedSchedule;
 }
