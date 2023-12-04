@@ -1,4 +1,4 @@
-import '../../dtos/ingredient/ingredient_dto.dart';
+import '../ingredient/ingredient_dto.dart';
 
 class Recipe {
   int id;

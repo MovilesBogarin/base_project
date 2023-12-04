@@ -6,6 +6,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../presentation/widgets/drawers/custom_drawer.dart';
@@ -19,7 +20,6 @@ class CalendarScreen extends StatefulWidget {
 
 class CalendarState extends State<CalendarScreen>
     with CustomAppBar, CustomDrawer {
-
   DateTime today = DateTime.now();
   DateTime? _selecteDay;
   DateTime? RangeStart;
@@ -75,8 +75,12 @@ class CalendarState extends State<CalendarScreen>
                     Custom_Button(
                       txt: 'Generar reporte',
                       onPressed: () {
-                        var date1 = "${formatDate(RangeFinish)}";
-                        var date2 = "${formatDate(RangeStart)}";
+                        String date1 = RangeFinish != null
+                            ? DateFormat('yyyy-MM-dd')
+                                .format(RangeFinish ?? DateTime.now())
+                            : 'null';
+                        String date2 = DateFormat('yyyy-MM-dd')
+                            .format(RangeStart ?? DateTime.now());
                         var recipeParam = recipesSeleted.toString();
                         context.push(
                             '/recipes/clendar/$date1/$date2/$recipeParam');
