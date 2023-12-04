@@ -1,4 +1,5 @@
 import 'package:base_project/config/helpers/dateFormater.dart';
+import 'package:base_project/domain/dtos/ingredient/ingredient_dto.dart';
 import 'package:base_project/domain/dtos/recipe/recipe_dto.dart';
 import 'package:base_project/domain/dtos/schedule_recipe/schedule_recipe_dto.dart';
 import 'package:base_project/presentation/calendar/calendar_presenter.dart';
@@ -12,6 +13,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../presentation/widgets/appbars/custom_appbar.dart';
 import '../../presentation/widgets/drawers/custom_drawer.dart';
@@ -29,8 +31,9 @@ class CalendarState extends ConsumerState<CalendarScreen>
   DateTime? _selecteDay;
   DateTime? RangeStart;
   DateTime? RangeFinish;
-
- 
+  String? daySelect;
+  late ScheduleRecipe currentSchedule;
+  int id = 0;
 
   @override
   void initState() {
@@ -58,8 +61,20 @@ class CalendarState extends ConsumerState<CalendarScreen>
     });
   }
 
+  createScheduleRecipe() => ref
+      .read(scheduleRecipesProvider.notifier)
+      .createSchedule(currentSchedule);
+
+  updateScheduleRecipe() => ref
+      .read(scheduleRecipesProvider.notifier)
+      .updateScheduleRecipe(currentSchedule);
+
+  deleteScheduleRecipe() =>
+      ref.read(scheduleRecipesProvider.notifier).deleteScheduleRecipe(id);
+
   // List<Map<String, dynamic>> recipesList = recipes;
   List<Recipe> recipesSeleted = [];
+  List<ScheduleRecipe> scheduleListSelected = [];
 
   String currentRecipe = 'Escoge una de tus recetas :)';
 
@@ -127,7 +142,17 @@ class CalendarState extends ConsumerState<CalendarScreen>
                                 onChanged: ((value) {
                                   setState(() {
                                     recipeController = value.toString();
-                                    recipesSeleted.add(value!);
+
+                                    daySelect = DateFormat('yyyy-MM-dd')
+                                        .format(RangeStart ?? DateTime.now());
+
+                                    currentSchedule = ScheduleRecipe(
+                                        id_schedule: UniqueKey().hashCode,
+                                        id_recipe: value!.id,
+                                        quantity: 1,
+                                        date: daySelect!);
+
+                                    createScheduleRecipe();
                                   });
                                 })),
 
@@ -136,40 +161,58 @@ class CalendarState extends ConsumerState<CalendarScreen>
                               if (RangeFinish == null)
                                 ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: recipesSeleted.length,
+                                    itemCount: scheduleList.length,
                                     itemBuilder: (context, index) {
                                       return Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              '${recipesSeleted[index].name} on ${formatDate(RangeStart)} ',
+                                              '${schedueRecipeName(scheduleList[index].id_recipe, recipesList)}, en el: ${scheduleList[index].date} ',
                                               style: TextStyle(),
                                             ),
                                             IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    quantity++;
+                                                    currentSchedule.quantity =
+                                                        scheduleList[index]
+                                                                .quantity =
+                                                            scheduleList[index]
+                                                                    .quantity +
+                                                                1;
+
+                                                    updateScheduleRecipe();
                                                   });
                                                 },
                                                 icon: const Icon(Icons.add)),
                                             IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    if (quantity > 0)
-                                                      quantity--;
+                                                    if (scheduleList[index]
+                                                            .quantity >
+                                                        1)
+                                                      currentSchedule.quantity =
+                                                          scheduleList[index]
+                                                                  .quantity =
+                                                              scheduleList[
+                                                                          index]
+                                                                      .quantity -
+                                                                  1;
+
+                                                    updateScheduleRecipe();
                                                   });
                                                 },
                                                 icon: const Icon(Icons.remove)),
                                             Text(
-                                              '${quantity}',
+                                              '${scheduleList[index].quantity}',
                                               style: TextStyle(),
                                             ),
                                             IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    recipesSeleted.remove(
-                                                        recipesSeleted[index]);
+                                                    id = scheduleList[index]
+                                                        .id_schedule;
+                                                    deleteScheduleRecipe();
                                                   });
                                                 },
                                                 icon: const Icon(Icons.delete)),
@@ -179,14 +222,13 @@ class CalendarState extends ConsumerState<CalendarScreen>
                           ),
                           const SizedBox(height: 40),
 
-                          Text('${scheduleList.map((e) => e.date).toList()}'),
-
                           if (RangeFinish == null)
                             Custom_Button(
                               txt: 'Guardar recetas',
                               onPressed: () {},
                             ),
-
+                          const SizedBox(height: 40),
+                          Text(scheduleList.toString())
                           /*** */
                         ],
                       ),
@@ -196,4 +238,26 @@ class CalendarState extends ConsumerState<CalendarScreen>
               });
         }));
   }
+}
+
+String? schedueRecipeName(int id_schedule, List<Recipe> recipes) {
+  String? nombre;
+
+  print(id_schedule);
+
+  Recipe? recipeEncontrada = recipes.firstWhere(
+    (recipe) => recipe.id == id_schedule,
+    orElse: () => Recipe(
+        id: 0,
+        name: 'No encontrado',
+        description: '',
+        ingredients: [],
+        steps: []),
+  );
+
+  if (recipeEncontrada.id != 0) {
+    nombre = recipeEncontrada.name;
+  }
+
+  return nombre;
 }

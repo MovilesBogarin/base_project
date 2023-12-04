@@ -4,9 +4,7 @@ import 'package:base_project/infrastructure/dataSources/schedule_recipe_data_sou
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part  'schedule_recipes_provider.g.dart';
-
-
+part 'schedule_recipes_provider.g.dart';
 
 @riverpod
 class ScheduleRecipes extends _$ScheduleRecipes {
@@ -19,32 +17,25 @@ class ScheduleRecipes extends _$ScheduleRecipes {
     return await ScheduleRecipeDataSource().getScheduleRecipes();
   }
 
-    int createRecipe() {
-    ScheduleRecipe newSchedule = ScheduleRecipeCaster.toSchedule({
-      'id_schedule': UniqueKey().hashCode,
-      'id_recipe': 0,
-      'quantity': 0,
-      'date': ''
-      
-    });
+  void createSchedule(ScheduleRecipe newSchedule) {
     ScheduleRecipeDataSource().createScheduleRecipe(newSchedule);
     state = AsyncValue.data([...state.asData!.value, newSchedule]);
-    return newSchedule.id_schedule;
   }
 
-    Future<void> updateScheduleRecipe(ScheduleRecipe schedule) async {
+  Future<void> updateScheduleRecipe(ScheduleRecipe schedule) async {
     await ScheduleRecipeDataSource().updateScheduleRecipe(schedule);
-    ScheduleRecipe scheduleToUpdate = state.asData!.value.firstWhere((element) => element.id_schedule == schedule.id_schedule);
+    ScheduleRecipe scheduleToUpdate = state.asData!.value
+        .firstWhere((element) => element.id_schedule == schedule.id_schedule);
     scheduleToUpdate.id_schedule = schedule.id_schedule;
     scheduleToUpdate.id_recipe = schedule.id_recipe;
     scheduleToUpdate.quantity = schedule.quantity;
     scheduleToUpdate.date = schedule.date;
     state = AsyncValue.data([...state.asData!.value]);
   }
-    void deleteScheduleRecipe(int id) {
+
+  void deleteScheduleRecipe(int id) {
     ScheduleRecipeDataSource().deleteSchduleRecipe(id);
-    state = AsyncValue.data([...state.asData!.value.where((element) => element.id_schedule != id)]);
+    state = AsyncValue.data(
+        [...state.asData!.value.where((element) => element.id_schedule != id)]);
   }
-
-
 }
