@@ -1,5 +1,5 @@
 import 'package:base_project/config/helpers/dateFormater.dart';
-import 'package:base_project/domain/dtos/ingredient/ingredient_dto.dart';
+
 import 'package:base_project/domain/dtos/recipe/recipe_dto.dart';
 import 'package:base_project/domain/dtos/schedule_recipe/schedule_recipe_dto.dart';
 import 'package:base_project/presentation/calendar/calendar_presenter.dart';
@@ -91,11 +91,6 @@ class CalendarState extends ConsumerState<CalendarScreen>
         body: Consumer(builder: (context, ref, _) {
           final provider = ref.watch(recipesProvider);
           final providerS = ref.watch(scheduleRecipesProvider);
-          //final   Future List<ScheduleRecipe> providerSchedule = ref.watch(scheduleRecipesProvider.notifier).getScheduleRecipes();
-
-          // ignore: unused_local_variable
-          // List<ScheduleRecipe> scheduleList = providerSchedule.when(data: (recipesList) => recipesList, error: (error, stack) =>   List<ScheduleRecipe> l = [] ,loading: () => loading);
-          // final  List<ScheduleRecipe> scheduleList = finalproviderSchedule.whenData((value) => value);
 
           return provider.when(
               loading: () => loading,
@@ -158,6 +153,10 @@ class CalendarState extends ConsumerState<CalendarScreen>
 
                           Column(
                             children: <Widget>[
+                              const SizedBox(height: 40),
+                              if (RangeFinish == null)
+                                Text(
+                                    'Recetas para ${formatDate((RangeStart ?? DateTime.now()))}'),
                               ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: scheduleIsInsSelected(scheduleList,
@@ -173,7 +172,7 @@ class CalendarState extends ConsumerState<CalendarScreen>
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              '${schedueRecipeName(scheduleListSelected[index].id_recipe, recipesList)}, en el: ${scheduleListSelected[index].date} ',
+                                              '${schedueRecipeName(scheduleListSelected[index].id_recipe, recipesList)} ',
                                               style: TextStyle(),
                                             ),
                                             IconButton(
@@ -275,7 +274,6 @@ String? schedueRecipeName(int id_schedule, List<Recipe> recipes) {
 List<ScheduleRecipe> scheduleIsInsSelected(
     List<ScheduleRecipe> scheduleList, DateTime startDate) {
   List<ScheduleRecipe> selectedSchedule = [];
-  print(startDate.toString());
 
   String formattedStartDate = DateFormat('yyyy-MM-dd').format(startDate);
 
