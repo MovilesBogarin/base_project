@@ -4,6 +4,11 @@ This file is used to explain in detail changes made to the food structured app.
 <!-- TOC -->
   [[TOC]]
 
+## V 2.0.0
+Date: Dec 04, 2023
+* [NEW]
+  * Added report screen and full connection to API
+
 ## V 1.2.1
 Date: Dec 01, 2023
 * [FIX]
