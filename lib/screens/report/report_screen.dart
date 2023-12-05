@@ -1,18 +1,9 @@
 import 'package:base_project/domain/dtos/ingredient/ingredient_dto.dart';
-import 'package:base_project/domain/dtos/recipe/recipe_dto.dart';
 import 'package:base_project/presentation/providers/report/report_provider.dart';
-import 'package:base_project/presentation/widgets/drawers/custom_drawer.dart';
-import 'package:base_project/presentation/widgets/inputs/Custom_Button.dart';
 import 'package:base_project/presentation/widgets/loading/loading.dart';
-import 'package:base_project/static/noStatic.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../presentation/providers/recipe/recipes_provider.dart';
-import 'package:base_project/static/static.dart';
 import 'package:flutter/material.dart';
-import '../../presentation/widgets/appbars/custom_appbar.dart';
-
-import 'package:dropdown_search/dropdown_search.dart';
 
 class CalenderRecipe extends ConsumerStatefulWidget {
   final String date1;
@@ -67,6 +58,10 @@ class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
                     ),
                   ),
                 ),
+                if (ingredientScheduled.isEmpty)
+                  Text('No hay recetas agendadas.',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 Expanded(
                   child: ListView.builder(
                     itemCount: ingredientScheduled.length,

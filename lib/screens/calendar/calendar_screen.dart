@@ -28,7 +28,7 @@ class CalendarScreen extends ConsumerStatefulWidget {
 class CalendarState extends ConsumerState<CalendarScreen>
     with CustomAppBar, CustomDrawer, Loading {
   DateTime today = DateTime.now();
-  DateTime? _selecteDay;
+
   DateTime? RangeStart;
   DateTime? RangeFinish;
   String? daySelect;
@@ -43,7 +43,7 @@ class CalendarState extends ConsumerState<CalendarScreen>
   }
 
   String formatDate(DateTime? date) {
-    return '${date?.add(const Duration(days: 1)).fullDate()}';
+    return '${date?.fullDate()}';
   }
 
   void _onDaySelected(DateTime day, DateTime focusedDay) {
@@ -54,7 +54,6 @@ class CalendarState extends ConsumerState<CalendarScreen>
 
   void _onDaysSelected(DateTime? start, DateTime? finish, DateTime focusedDay) {
     setState(() {
-      _selecteDay = null;
       today = focusedDay;
       RangeStart = start;
       RangeFinish = finish;
@@ -80,7 +79,6 @@ class CalendarState extends ConsumerState<CalendarScreen>
 
   String? recipeController;
   int quantity = 0;
-  final ScrollController _scrollControler = ScrollController();
 
   late final MenuItem menuItem;
   @override
@@ -118,8 +116,12 @@ class CalendarState extends ConsumerState<CalendarScreen>
                               Custom_Button(
                                 txt: 'Generar reporte',
                                 onPressed: () {
-                                  var date1 = "${formatDate(RangeFinish)}";
-                                  var date2 = "${formatDate(RangeStart)}";
+                                  String date1 = RangeFinish != null
+                                      ? DateFormat('yyyy-MM-dd')
+                                          .format(RangeFinish ?? DateTime.now())
+                                      : 'null';
+                                  String date2 = DateFormat('yyyy-MM-dd')
+                                      .format(RangeStart ?? DateTime.now());
                                   var recipeParam = recipesSeleted.toString();
                                   context.push(
                                       '/recipes/clendar/$date1/$date2/$recipeParam');
