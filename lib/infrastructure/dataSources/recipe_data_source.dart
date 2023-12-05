@@ -16,11 +16,13 @@ class RecipeDataSource {
   }
 
   Future<void> createRecipe(Recipe recipe) async {
-    await _dio.post('$_baseUrl/recipes/create', data: RecipeCaster.toMap(recipe));
+    await _dio.post('$_baseUrl/recipes/create',
+        data: RecipeCaster.toMap(recipe));
   }
 
   Future<void> updateRecipe(Recipe recipe) async {
-    await _dio.put('$_baseUrl/recipes/${recipe.id}', data: RecipeCaster.toMap(recipe));
+    await _dio.put('$_baseUrl/recipes/${recipe.id}',
+        data: RecipeCaster.toMap(recipe));
   }
 
   Future<void> deleteRecipe(int id) async {

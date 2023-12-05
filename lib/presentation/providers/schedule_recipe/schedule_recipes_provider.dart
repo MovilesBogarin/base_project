@@ -1,7 +1,5 @@
 import 'package:base_project/domain/dtos/schedule_recipe/schedule_recipe_dto.dart';
-import 'package:base_project/infrastructure/casters/schedule_recipe_caster/schedule_recipe_caster.dart';
 import 'package:base_project/infrastructure/dataSources/schedule_recipe_data_source.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'schedule_recipes_provider.g.dart';
