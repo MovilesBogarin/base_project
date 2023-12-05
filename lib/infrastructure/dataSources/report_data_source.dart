@@ -1,4 +1,3 @@
-import 'package:base_project/infrastructure/casters/recipe/recipe_caster.dart';
 import 'package:base_project/infrastructure/casters/scheduled_recipe/scheduled_recipe_caster.dart';
 import 'package:dio/dio.dart';
 import '../../config/const/env/environment.dart';
@@ -9,9 +8,8 @@ class ReportDataSource {
   final Dio _dio = Dio();
 
   Future<List<Recipe>> getReportedRecipes(String date) async {
-    final result = await _dio.post('$_baseUrl/schedule/by-date',
-        //enviar variable
-        data: {"date": date});
+    final result =
+        await _dio.post('$_baseUrl/schedule/by-date', data: {"date": date});
     final scheduledRecipesListCasted =
         ScheduledRecipesCaster.toScheduledRecipeList(result.data);
     final scheduledRecipesMultiplyQuantity =
@@ -22,7 +20,6 @@ class ReportDataSource {
   Future<List<Recipe>> getReportedRecipesRange(
       String startDate, String endDate) async {
     final result = await _dio.post('$_baseUrl/schedule/by-range',
-        //enviar variable
         data: {"startDate": startDate, "endDate": endDate});
     final scheduledRecipesListCasted =
         ScheduledRecipesCaster.toScheduledRecipeList(result.data);

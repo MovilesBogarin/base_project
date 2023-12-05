@@ -1,7 +1,5 @@
 import 'package:base_project/domain/dtos/recipe/recipe_dto.dart';
 
-import '../ingredient/ingredient_dto.dart';
-
 class ScheduledRecipe {
   int id_schedule;
   int id_recipe;
