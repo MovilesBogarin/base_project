@@ -6,7 +6,7 @@ part of 'report_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$reportHash() => r'bcc52dfab5a3c6bbde66cbe8b5ecf4dfb29aeaa7';
+String _$reportHash() => r'28c605c109598c6958037a46a6dec8fa017f056b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,13 +30,13 @@ class _SystemHash {
 }
 
 abstract class _$Report
-    extends BuildlessAutoDisposeAsyncNotifier<List<Ingredient>> {
+    extends BuildlessAutoDisposeAsyncNotifier<List<CheckedList>> {
   late final String dateInit;
-  late final String dateEnd;
+  late final String dateFinal;
 
-  FutureOr<List<Ingredient>> build(
+  FutureOr<List<CheckedList>> build(
     String dateInit,
-    String dateEnd,
+    String dateFinal,
   );
 }
 
@@ -45,18 +45,18 @@ abstract class _$Report
 const reportProvider = ReportFamily();
 
 /// See also [Report].
-class ReportFamily extends Family<AsyncValue<List<Ingredient>>> {
+class ReportFamily extends Family<AsyncValue<List<CheckedList>>> {
   /// See also [Report].
   const ReportFamily();
 
   /// See also [Report].
   ReportProvider call(
     String dateInit,
-    String dateEnd,
+    String dateFinal,
   ) {
     return ReportProvider(
       dateInit,
-      dateEnd,
+      dateFinal,
     );
   }
 
@@ -66,7 +66,7 @@ class ReportFamily extends Family<AsyncValue<List<Ingredient>>> {
   ) {
     return call(
       provider.dateInit,
-      provider.dateEnd,
+      provider.dateFinal,
     );
   }
 
@@ -87,15 +87,15 @@ class ReportFamily extends Family<AsyncValue<List<Ingredient>>> {
 
 /// See also [Report].
 class ReportProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<Report, List<Ingredient>> {
+    extends AutoDisposeAsyncNotifierProviderImpl<Report, List<CheckedList>> {
   /// See also [Report].
   ReportProvider(
     String dateInit,
-    String dateEnd,
+    String dateFinal,
   ) : this._internal(
           () => Report()
             ..dateInit = dateInit
-            ..dateEnd = dateEnd,
+            ..dateFinal = dateFinal,
           from: reportProvider,
           name: r'reportProvider',
           debugGetCreateSourceHash:
@@ -105,7 +105,7 @@ class ReportProvider
           dependencies: ReportFamily._dependencies,
           allTransitiveDependencies: ReportFamily._allTransitiveDependencies,
           dateInit: dateInit,
-          dateEnd: dateEnd,
+          dateFinal: dateFinal,
         );
 
   ReportProvider._internal(
@@ -116,19 +116,19 @@ class ReportProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.dateInit,
-    required this.dateEnd,
+    required this.dateFinal,
   }) : super.internal();
 
   final String dateInit;
-  final String dateEnd;
+  final String dateFinal;
 
   @override
-  FutureOr<List<Ingredient>> runNotifierBuild(
+  FutureOr<List<CheckedList>> runNotifierBuild(
     covariant Report notifier,
   ) {
     return notifier.build(
       dateInit,
-      dateEnd,
+      dateFinal,
     );
   }
 
@@ -139,20 +139,20 @@ class ReportProvider
       override: ReportProvider._internal(
         () => create()
           ..dateInit = dateInit
-          ..dateEnd = dateEnd,
+          ..dateFinal = dateFinal,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         dateInit: dateInit,
-        dateEnd: dateEnd,
+        dateFinal: dateFinal,
       ),
     );
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<Report, List<Ingredient>>
+  AutoDisposeAsyncNotifierProviderElement<Report, List<CheckedList>>
       createElement() {
     return _ReportProviderElement(this);
   }
@@ -161,36 +161,36 @@ class ReportProvider
   bool operator ==(Object other) {
     return other is ReportProvider &&
         other.dateInit == dateInit &&
-        other.dateEnd == dateEnd;
+        other.dateFinal == dateFinal;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, dateInit.hashCode);
-    hash = _SystemHash.combine(hash, dateEnd.hashCode);
+    hash = _SystemHash.combine(hash, dateFinal.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin ReportRef on AutoDisposeAsyncNotifierProviderRef<List<Ingredient>> {
+mixin ReportRef on AutoDisposeAsyncNotifierProviderRef<List<CheckedList>> {
   /// The parameter `dateInit` of this provider.
   String get dateInit;
 
-  /// The parameter `dateEnd` of this provider.
-  String get dateEnd;
+  /// The parameter `dateFinal` of this provider.
+  String get dateFinal;
 }
 
 class _ReportProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<Report, List<Ingredient>>
+    extends AutoDisposeAsyncNotifierProviderElement<Report, List<CheckedList>>
     with ReportRef {
   _ReportProviderElement(super.provider);
 
   @override
   String get dateInit => (origin as ReportProvider).dateInit;
   @override
-  String get dateEnd => (origin as ReportProvider).dateEnd;
+  String get dateFinal => (origin as ReportProvider).dateFinal;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

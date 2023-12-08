@@ -114,7 +114,7 @@ class CalendarState extends ConsumerState<CalendarScreen>
                             children: [
                               const SizedBox(height: 10),
                               Custom_Button(
-                                txt: 'Generar reporte',
+                                txt: 'Visualizar productos',
                                 onPressed: () {
                                   String date1 = RangeFinish != null
                                       ? DateFormat('yyyy-MM-dd')

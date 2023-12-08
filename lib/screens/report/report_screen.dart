@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:base_project/domain/dtos/ingredient/ingredient_dto.dart';
+import 'package:base_project/domain/dtos/scheduled_recipes/checkedList_dto.dart';
+import 'package:base_project/domain/dtos/scheduled_recipes/checklist_dto.dart';
 import 'package:base_project/presentation/providers/report/report_provider.dart';
 import 'package:base_project/presentation/widgets/loading/loading.dart';
 import 'package:flutter/rendering.dart';
@@ -19,12 +23,25 @@ class CalenderRecipe extends ConsumerStatefulWidget {
 class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
     with Loading {
   List<bool> selectedStates = []; // Mover la lista a nivel de clase
-
+  late Future<List<CheckedList>> currentCheckedList;
   @override
   void initState() {
     super.initState();
-    ref.read(reportProvider.call(widget.date2, widget.date1));
+    // ref.read(reportProvider.call(widget.date2, widget.date1));
+    ref.read(reportProvider.call(widget.date2, widget.date1).notifier);
   }
+
+  void _mostrarSnackbar(BuildContext context, String mensaje) {
+    final snackBar = SnackBar(
+      content: Text(mensaje),
+      backgroundColor: Colors.orange,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  updateCheckedIngredient(CheckedList checkedList) => ref
+      .read(reportProvider.call(widget.date2, widget.date1).notifier)
+      .updateCheckedIngredients(checkedList);
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +55,13 @@ class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
 
         return provider.when(
           loading: () => loading,
-          error: (error, stack) => const Center(child: Text('Error')),
-          data: (ingredientScheduled) => SafeArea(
+          error: (error, stack) {
+            return Center(
+                child: Column(
+              children: [Text(error.toString())],
+            ));
+          },
+          data: (listCheckedList) => SafeArea(
             child: Column(
               children: [
                 Chip(
@@ -58,42 +80,59 @@ class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
                     ),
                   ),
                 ),
-                if (ingredientScheduled.isEmpty)
+                if (listCheckedList.isEmpty)
                   Text('No hay recetas agendadas.',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: ingredientScheduled.length,
+                    itemCount: listCheckedList.length,
                     itemBuilder: (context, index) {
                       selectedStates.add(false);
 
-                      Ingredient ingredient = ingredientScheduled[index];
+                      CheckedList checkedList = listCheckedList[index];
 
                       return CheckboxListTile(
+                        secondary: checkedList.warning
+                            ? IconButton(
+                                icon: Icon(Icons.error),
+                                color: Colors.orange,
+                                iconSize: 30,
+                                onPressed: () {
+                                  _mostrarSnackbar(
+                                      context, 'Producto marcado parcialmente');
+                                },
+                              )
+                            : null,
                         title: Text(
-                          ingredient.name,
+                          checkedList.name,
                           selectionColor: Color.fromARGB(255, 26, 57, 91),
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        value: selectedStates[index],
+                        value: checkedList.checked,
                         subtitle: Text(
-                          '${ingredient.unit}: ${ingredient.quantity}',
+                          '${checkedList.unit}: ${checkedList.quantity}',
                           style: TextStyle(
                             fontSize: 16,
                           ),
                         ),
                         onChanged: (value) {
                           setState(() {
-                            selectedStates[index] = !selectedStates[index];
-                            value = selectedStates[index];
+                            checkedList.checked = !checkedList.checked;
+                            value = checkedList.checked;
+
+                            updateCheckedIngredient(checkedList);
+
+                            // _mostrarDialogo(
+                            //     context,
+                            //     checkedList.listScheduledIngredientsAffected.);
                           });
                         },
                       );
-                    },
+                    }, ////
                   ),
                 ),
               ],

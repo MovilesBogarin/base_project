@@ -6,7 +6,7 @@ part of 'schedule_recipes_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$scheduleRecipesHash() => r'32c18cd0f7fa8526394d0128821291b78396f855';
+String _$scheduleRecipesHash() => r'56fb9268d2506c062aa23c2409c36118dc17addd';
 
 /// See also [ScheduleRecipes].
 @ProviderFor(ScheduleRecipes)
