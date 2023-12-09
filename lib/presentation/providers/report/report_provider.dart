@@ -1,12 +1,9 @@
 import 'package:base_project/domain/dtos/ingredient/ingredient_dto.dart';
-import 'package:base_project/domain/dtos/schedule_recipe/schedule_recipe_dto.dart';
 import 'package:base_project/domain/dtos/scheduled_recipes/checkedList_dto.dart';
 import 'package:base_project/domain/dtos/scheduled_recipes/checklist_dto.dart';
 import 'package:base_project/domain/dtos/scheduled_recipes/scheduled_ingredient_affected_dto.dart';
 import 'package:base_project/domain/dtos/scheduled_recipes/scheduled_recipes_dto.dart';
 import 'package:base_project/infrastructure/dataSources/report_data_source.dart';
-import 'package:base_project/infrastructure/dataSources/schedule_recipe_data_source.dart';
-import 'package:collection/collection.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,10 +15,6 @@ part 'report_provider.g.dart';
 class Report extends _$Report {
   Report() : super();
 
-  // @override
-  @override
-  // FutureOr<List<CheckedList>> build(String dateInit, String dateEnd) async =>
-  //     await getScheduledRecipes(dateInit, dateEnd);
   @override
   FutureOr<List<CheckedList>> build(String dateInit, String dateFinal) async {
     // await getScheduledRecipes(dateInit, dateFinal);
@@ -32,15 +25,6 @@ class Report extends _$Report {
       return getRecipeSum(await getReportedRecipesFromDS(dateInit));
     }
   }
-
-// Future<List<CheckedList>> getScheduledRecipes(
-//     String dateInit, String dateEnd) async {
-//   if (dateEnd != 'null') {
-//     return getRecipeSum(await getReportedRecipesRangeFromDS(dateInit, dateEnd));
-//   } else {
-//     return getRecipeSum(await getReportedRecipesFromDS(dateInit));
-//   }
-// }
 
   Future<List<ScheduledRecipe>> getReportedRecipesFromDS(String date) async {
     return await ReportDataSource().getReportedRecipes(date);
@@ -56,7 +40,6 @@ class Report extends _$Report {
   }
 
   List<CheckedList> getRecipeSum(List<ScheduledRecipe> listScheduledRecipes) {
-    List<Ingredient> listIngredientsFinal = [];
     List<CheckedList> listCheckedlistFinal = [];
 
     for (int i = 0; i < listScheduledRecipes.length; i++) {

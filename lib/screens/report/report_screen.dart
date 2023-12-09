@@ -1,11 +1,8 @@
 import 'dart:async';
 
-import 'package:base_project/domain/dtos/ingredient/ingredient_dto.dart';
 import 'package:base_project/domain/dtos/scheduled_recipes/checkedList_dto.dart';
-import 'package:base_project/domain/dtos/scheduled_recipes/checklist_dto.dart';
 import 'package:base_project/presentation/providers/report/report_provider.dart';
 import 'package:base_project/presentation/widgets/loading/loading.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -17,17 +14,16 @@ class CalenderRecipe extends ConsumerStatefulWidget {
       {super.key, required this.date1, required this.date2, this.recipeParam});
 
   @override
-  _CalendarRecipesScreenState createState() => _CalendarRecipesScreenState();
+  CalendarRecipesScreenState createState() => CalendarRecipesScreenState();
 }
 
-class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
+class CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
     with Loading {
-  List<bool> selectedStates = []; // Mover la lista a nivel de clase
+  List<bool> selectedStates = [];
   late Future<List<CheckedList>> currentCheckedList;
   @override
   void initState() {
     super.initState();
-    // ref.read(reportProvider.call(widget.date2, widget.date1));
     ref.read(reportProvider.call(widget.date2, widget.date1).notifier);
   }
 
@@ -65,14 +61,14 @@ class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
             child: Column(
               children: [
                 Chip(
-                  backgroundColor: Color.fromARGB(255, 26, 57, 91),
+                  backgroundColor: const Color.fromARGB(255, 26, 57, 91),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50.0),
                   ),
                   label: Text(
                     (widget.date1 != 'null')
                         ? '${widget.date2} al ${widget.date1}'
-                        : '${widget.date2}',
+                        : widget.date2,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -81,7 +77,7 @@ class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
                   ),
                 ),
                 if (listCheckedList.isEmpty)
-                  Text('No hay recetas agendadas.',
+                  const Text('No hay recetas agendadas.',
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 Expanded(
@@ -95,7 +91,7 @@ class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
                       return CheckboxListTile(
                         secondary: checkedList.warning
                             ? IconButton(
-                                icon: Icon(Icons.error),
+                                icon: const Icon(Icons.error),
                                 color: Colors.orange,
                                 iconSize: 30,
                                 onPressed: () {
@@ -106,8 +102,8 @@ class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
                             : null,
                         title: Text(
                           checkedList.name,
-                          selectionColor: Color.fromARGB(255, 26, 57, 91),
-                          style: TextStyle(
+                          selectionColor: const Color.fromARGB(255, 26, 57, 91),
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -115,7 +111,7 @@ class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
                         value: checkedList.checked,
                         subtitle: Text(
                           '${checkedList.unit}: ${checkedList.quantity}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                           ),
                         ),
@@ -125,14 +121,10 @@ class _CalendarRecipesScreenState extends ConsumerState<CalenderRecipe>
                             value = checkedList.checked;
 
                             updateCheckedIngredient(checkedList);
-
-                            // _mostrarDialogo(
-                            //     context,
-                            //     checkedList.listScheduledIngredientsAffected.);
                           });
                         },
                       );
-                    }, ////
+                    }, 
                   ),
                 ),
               ],

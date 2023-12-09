@@ -45,13 +45,6 @@ class CalendarState extends ConsumerState<CalendarScreen>
   String formatDate(DateTime? date) {
     return '${date?.fullDate()}';
   }
-
-  void _onDaySelected(DateTime day, DateTime focusedDay) {
-    setState(() {
-      today = day;
-    });
-  }
-
   void _onDaysSelected(DateTime? start, DateTime? finish, DateTime focusedDay) {
     setState(() {
       today = focusedDay;
@@ -114,7 +107,7 @@ class CalendarState extends ConsumerState<CalendarScreen>
                             children: [
                               const SizedBox(height: 10),
                               Custom_Button(
-                                txt: 'Visualizar productos',
+                                txt: 'Visualizar ingredientes',
                                 onPressed: () {
                                   String date1 = RangeFinish != null
                                       ? DateFormat('yyyy-MM-dd')
@@ -129,9 +122,8 @@ class CalendarState extends ConsumerState<CalendarScreen>
                               ),
                               const SizedBox(height: 10),
                             ],
-                          ), //******* */
+                          ),
                           const SizedBox(height: 40),
-                          //recipesList.map((e) => e.name).toList()
                           if (RangeFinish == null)
                             DropdownSearch(
                                 items: recipesList,
@@ -232,15 +224,6 @@ class CalendarState extends ConsumerState<CalendarScreen>
                             ],
                           ),
                           const SizedBox(height: 40),
-
-                          /*if (RangeFinish == null)
-                            Custom_Button(
-                              txt: 'Guardar recetas',
-                              onPressed: () {},
-                            ),
-                          const SizedBox(height: 40),
-                          Text(scheduleList.toString())*/
-                          /*** */
                         ],
                       ),
                     ),
