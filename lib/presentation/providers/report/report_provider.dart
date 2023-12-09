@@ -100,15 +100,14 @@ class Report extends _$Report {
               listCheckedlistFinal[y]
                   .listScheduledIngredientsAffected
                   .add(scheduledIngredientAffected);
-              if (checklisList[x].checked == false) {
-                listCheckedlistFinal[y].checked = false;
-              }
               if (listCheckedlistFinal[y].date !=
                       listScheduledRecipes[i].date &&
                   checklisList[x].checked != listCheckedlistFinal[y].checked) {
                 listCheckedlistFinal[y].warning = true;
               }
-
+              if (checklisList[x].checked == false) {
+                listCheckedlistFinal[y].checked = false;
+              }
               encontrado = true;
             }
           }
